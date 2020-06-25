@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Notifications\LocaleVerifyEmail;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
@@ -18,6 +21,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'gender',
+        'locale',
         'email',
         'password',
     ];
@@ -40,4 +44,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Changes laravel mail template to localized
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new LocaleVerifyEmail());
+    }
 }

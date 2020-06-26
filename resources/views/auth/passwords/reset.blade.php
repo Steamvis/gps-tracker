@@ -8,11 +8,13 @@
                     <div class="card-header">{{ __('passwords.reset') }}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('password.update', ['locale' => app()->getLocale()]) }}">
+                        <form method="POST" action="{{ route('password.update', [
+                                'locale' => app()->getLocale(),
+                                'token' => Route::current()->token
+                                ]) }}">
                             @csrf
 
-                            <input type="hidden" name="token" value="{{ $token }}">
-
+{{--                            <input type="hidden" name="token" value="{{ $token }}">--}}
                             <div class="form-group row">
                                 <label for="email"
                                        class="col-md-4 col-form-label text-md-right">{{ __('user.general.email') }}</label>

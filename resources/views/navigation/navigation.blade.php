@@ -7,13 +7,18 @@
             <ul class="navbar-nav ml-auto">
 
                 <ul>
-                @foreach($locales as $locale)
-                    <li>
-                    <a href="{{ route(Route::currentRouteName(), $locale) }}">{{ $locale }}</a>
-                    </li>
-                @endforeach
+                    @foreach($locales as $locale)
+                        @empty(Route::current()->token)
+                            @php($data = ['locale' => $locale, 'token' => Route::current()->token])
+                        @else
+                            @php($data = ['locale' => $locale])
+                        @endempty
+                        <li>
+                            <a href="{{ route(Route::currentRouteName(), $data) }}">{{ $locale }}</a>
+                        </li>
+                    @endforeach
                 </ul>
-                    <a class="p-5" href="{{ route('test', app()->getLocale()) }}"> test`</a>
+                <a class="p-5" href="{{ route('test', app()->getLocale()) }}"> test`</a>
                 @guest
                     <li class="nav-item">
                         <a class="nav-link"
@@ -39,7 +44,8 @@
                                 {{ __('Logout') }}
                             </a>
 
-                            <form id="logout-form" action="{{ route('logout', app()->getLocale()) }}" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{ route('logout', app()->getLocale()) }}" method="POST"
+                                  style="display: none;">
                                 @csrf
                             </form>
                         </div>

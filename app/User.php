@@ -2,8 +2,8 @@
 
 namespace App;
 
+use App\Notifications\LocaleResetPassword;
 use App\Notifications\LocaleVerifyEmail;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,5 +51,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new LocaleVerifyEmail());
+    }
+
+    /**
+     * Changes laravel mail template to localized
+     *
+     * @param $token
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new LocaleResetPassword($token));
     }
 }

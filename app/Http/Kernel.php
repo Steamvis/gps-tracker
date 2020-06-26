@@ -68,7 +68,7 @@ class Kernel extends HttpKernel
         'verified'         => EnsureEmailsVerified::class,
         'locale'           => Locale::class,
 
-        //        'verified'         => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+//'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         // changes for returned routes for localization
     ];
 }

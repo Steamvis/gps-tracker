@@ -18,6 +18,7 @@ return [
     'remember me'                        => 'Remember me',
     'forgot password'                    => 'Forgot Your Password?',
     'login'                              => 'Login',
+    'logout'                             => 'logout',
     'reset password'                     => 'Reset password',
     'send password link'                 => 'Send password reset link',
     'click here to request another'      => 'Click here to request another',
@@ -25,4 +26,6 @@ return [
     'if you did not receive the email'   => 'If you did not receive the email',
     'check your email verification link' => 'Before proceeding, please check your email for a verification link.',
     'fresh verification link email'      => 'A fresh verification link has been sent to your email address',
+    'logout ready'                       => 'Select "Logout" below if you are ready to end your current session.',
+    'ready to leave'                     => 'Ready to Leave?',
 ];

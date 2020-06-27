@@ -20,6 +20,6 @@ class LocaleHelper
 
     public static function getSupportedLocale(?string $locale): string
     {
-        return in_array($locale, static::LOCALES) ? $locale : env('DEFAULT_LOCALE');
+        return in_array($locale, static::LOCALES) ? $locale : static::getLocale();
     }
 }

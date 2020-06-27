@@ -10,7 +10,11 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('author_id');
+            $table->unsignedBigInteger('owner_id')->unique();
+            $table->unsignedInteger('country_id');
+            $table->unsignedBigInteger('cars_counter')->default(0);
+            $table->unsignedBigInteger('staff_counter')->default(0);
+            $table->string('logotype_path')->default('public/img/company/default-company.png');
             $table->string('title');
             $table->timestamps();
         });

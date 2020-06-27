@@ -1,10 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Notifications\LocaleResetPassword;
 use App\Notifications\LocaleVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -34,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'company_id',
     ];
 
     /**
@@ -44,6 +46,11 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function company(): HasOne
+    {
+        return $this->hasOne(Company::class, 'owner_id', 'id');
+    }
 
     /**
      * Changes laravel mail template to localized

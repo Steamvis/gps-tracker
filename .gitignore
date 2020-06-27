@@ -15,3 +15,8 @@ _ide_helper_models.php
 .phpstorm.meta.php
 _ide_helper.php
 TEMPLATE
+public/admin
+public/fonts
+public/landing
+public/images
+public/js

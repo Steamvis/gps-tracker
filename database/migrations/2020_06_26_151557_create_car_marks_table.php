@@ -10,7 +10,7 @@ class CreateCarMarksTable extends Migration
     {
         Schema::create('car_marks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('country_id');
+            $table->unsignedTinyInteger('country_id');
             $table->string('name');
             $table->string('mark_image_path');
         });

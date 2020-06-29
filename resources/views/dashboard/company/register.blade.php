@@ -1,7 +1,7 @@
 @extends('layouts.dashboard_without_company')
 
 @section('content')
-    <div class="card o-hidden border-0 shadow-lg my-5">
+    <div class="card border-0 shadow-lg" style="margin-top: 10%;">
         <div class="card-body p-0">
             <div class="row">
                 <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
@@ -24,10 +24,21 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-3 mb-sm-0">
-                                    <select class="form-control"
-                                                                         name="country_id" id="country" required>
+                                    <select class="form-control border selectpicker"
+                                            name="country_id"
+                                            data-live-search="true"
+                                            required
+                                            title="{{ __('dashboard.general.forms.select country') }}">
                                         @foreach($countries as $country)
-                                            <option value="{{ $country->id }}">{{ $country->name_ru }}</option>
+                                            <option
+                                                value="{{ $country->id }}"
+                                                data-content="<img
+                                                class='mr-3'
+                                                src='{{ $country->flag }}'
+                                                alt='{{ $country->name }}'
+                                                width='30px'
+                                                >{{ $country->name }}">
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>

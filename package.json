@@ -25,6 +25,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.13.1"
+        "@fortawesome/fontawesome-free": "^5.13.1",
+        "bootstrap-select": "^1.13.18",
+        "sweetalert2": "^9.15.2"
     }
 }

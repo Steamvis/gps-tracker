@@ -17,6 +17,8 @@
 <body class="bg-gradient-primary">
 
 <div class="container">
+    @include('navigation.landing_navigation')
+
     @yield('content')
 </div>
 

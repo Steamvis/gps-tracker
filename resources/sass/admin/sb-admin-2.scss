@@ -5,6 +5,10 @@
 
 // Import Bootstrap
 @import "~bootstrap";
+@import "~bootstrap-select/sass/bootstrap-select";
+
+// packages
+@import '~sweetalert2/dist/sweetalert2.min.css';
 
 // Import Custom SB Admin 2 Mixins and Components
 @import "mixins.scss";

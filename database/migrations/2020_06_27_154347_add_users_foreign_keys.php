@@ -13,7 +13,7 @@ class AddUsersForeignKeys extends Migration
                 ->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('cascade');
+                ->onDelete('set null');
         });
     }
 

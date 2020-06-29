@@ -26,10 +26,13 @@ Route::group([
 });
 
 Route::group([
-    'prefix'     => '{locale}',
-    'middleware' => ['locale', 'company', 'verified']
+    'prefix'     => '{locale}/dashboard',
+    'middleware' => ['locale', 'verified', 'company']
 ], function () {
+    Alert::success('hello', 'text');
+    Route::get('/', 'DashboardController@index')->name('dashboard.index');
     Route::resources([
-        'dashboard' => 'DashboardController'
+        'cars' => 'Cars\CarsController',
     ]);
+    Route::delete('destroy', 'Cars\CarsController@destroyMany')->name('cars.destroy.many');
 });

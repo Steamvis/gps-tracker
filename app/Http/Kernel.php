@@ -41,6 +41,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \RealRashid\SweetAlert\ToSweetAlert::class,
         ],
 
         'api' => [
@@ -66,9 +67,9 @@ class Kernel extends HttpKernel
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'signed'           => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle'         => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified'         => EnsureEmailsVerified::class,
+        'company'          => Company::class,
         'locale'           => Locale::class,
-        'company'          => Company::class
+        'verified'         => EnsureEmailsVerified::class,
 
         //'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         // changes for returned routes for localization

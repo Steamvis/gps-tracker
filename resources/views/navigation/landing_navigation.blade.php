@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Start Bootstrap</a>
+        <a class="navbar-brand js-scroll-trigger"
+           href="/">{{ config('app.name') }}</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -27,11 +28,6 @@
                         @endforeach
                     </div>
                 </div>
-                <li class=" nav-item">
-                    <a class="nav-link"
-                       href="{{ route('dashboard.index', app()->getLocale()) }}">{{ __('dashboard') }}
-                    </a>
-                </li>
                 @guest
                     <li class="nav-item">
                         <a class="nav-link"
@@ -46,6 +42,11 @@
                         </li>
                     @endif
                 @else
+                    <li class=" nav-item">
+                        <a class="nav-link"
+                           href="{{ route('dashboard.index', app()->getLocale()) }}">{{ __('dashboard.navigation.main') }}
+                        </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

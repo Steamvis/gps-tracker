@@ -18,11 +18,15 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        Company::create([
+        $company = Company::create([
             'owner_id'   => auth()->user()->id,
             'country_id' => $request->country_id,
             'title'      => $request->title
         ]);
+
+        $user = auth()->user();
+        $user->company_id = $company->id;
+        $user->save();
 
         return redirect(route('dashboard.index', app()->getLocale()));
     }

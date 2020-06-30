@@ -22,11 +22,24 @@ return [
         ]
     ],
     ///////////////////////////////////////////////
+    'statistics' => [
+        'transportations' => 'Transportation',
+        'staff'           => 'Staff',
+        'tasks'           => 'Tasks',
+        'about car'       => 'About car',
+        'next service'    => 'Next service',
+        'car income'      => 'Car income',
+    ],
+    ///////////////////////////////////////////////
     'cars'       => [
-        'cars'     => 'Cars',
-        'car'      => 'car',
-        'all cars' => 'All cars',
-        'table'    => [
+        'cars'         => 'Cars',
+        'car'          => 'car',
+        'all cars'     => 'All cars',
+        'moving'       => 'Moving',
+        'parking'      => 'Parking',
+        'connected'    => 'Connected',
+        'disconnected' => 'Disconnected',
+        'table'        => [
             'name'        => 'Name',
             'brand_name'  => 'Brand',
             'driver'      => 'Driver',
@@ -36,17 +49,24 @@ return [
             'gov_number'  => 'Car plate',
             'location'    => 'Location',
             'description' => 'Description',
+            'color'       => 'color',
         ],
-        'CRUD'     => [
+        'CRUD'         => [
             'create' => 'Create transport',
             'delete' => 'Delete transport',
             'edit'   => 'Edit transport',
             'view'   => 'Show transport'
         ],
-        'result'   => [
+        'result'       => [
             'create' => 'created a transport',
             'delete' => 'deleted a transport',
         ]
+    ],
+    'company'    => [
+        'register company' => 'Register company',
+        'table'            => [
+            'name',
+        ],
     ],
     ///////////////////////////////////////////////
     'navigation' => [

@@ -3,6 +3,7 @@
 namespace App\Services\Cars;
 
 use App\Models\Car;
+use App\Models\Company;
 use App\Services\AbstractBaseService;
 
 class CreateCar extends AbstractBaseService
@@ -11,7 +12,7 @@ class CreateCar extends AbstractBaseService
     {
         return [
             'name'        => 'required|string|min:5|max:255',
-            'color'       => 'nullable|string|min:4|max:7',
+            'color'       => 'nullable|string|size:7',
             'vin_number'  => 'nullable|string|min:11|max:17',
             'gov_number'  => 'nullable|string|min:3|max:30',
             'description' => 'nullable|string|min:10|max:500',
@@ -27,6 +28,8 @@ class CreateCar extends AbstractBaseService
         $this->validate($data);
 
         $car = Car::create($data);
+
+        Company::updateCarsCounter($car->company_id);
 
         return Car::find($car->id);
     }

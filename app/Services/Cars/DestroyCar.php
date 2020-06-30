@@ -21,6 +21,14 @@ class DestroyCar extends AbstractBaseService
 
         $car = Car::findOrFail($data['id']);
 
-        return $car->delete();
+        if ($car->company->owner_id === auth()->user()->id) {
+            $car->delete();
+
+            Company::updateCarsCounter(auth()->user()->company_id);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }

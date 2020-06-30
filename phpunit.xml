@@ -28,4 +28,8 @@
         <server name="SESSION_DRIVER" value="array"/>
         <server name="TELESCOPE_ENABLED" value="false"/>
     </php>
+    <logging>
+        <log type="coverage-html" target="./storage/work/report/"
+             lowUpperBound="35" highLowerBound="70"/>
+    </logging>
 </phpunit>

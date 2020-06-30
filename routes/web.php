@@ -22,14 +22,13 @@ Route::group([
     'middleware' => ['locale', 'verified']
 ], function () {
     Route::get('/register-company', 'Company\RegisterController@index')->name('company_register');
-    Route::post('/register-company', 'Company\RegisterController@register')->name('company_register_create');
+    Route::post('/register-company', 'Company\RegisterController@register')->name('company_register');
 });
 
 Route::group([
     'prefix'     => '{locale}/dashboard',
     'middleware' => ['locale', 'verified', 'company']
 ], function () {
-    Alert::success('hello', 'text');
     Route::get('/', 'DashboardController@index')->name('dashboard.index');
     Route::resources([
         'cars' => 'Cars\CarsController',

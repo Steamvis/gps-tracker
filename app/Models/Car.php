@@ -12,6 +12,7 @@ class Car extends Model
     protected $fillable = [
         'mark_id',
         'driver_id',
+        'color',
         'manager_id',
         'company_id',
         'name',
@@ -36,7 +37,7 @@ class Car extends Model
         return !$this->attributes['year'] ? __('dashboard.general.unknown') : $this->attributes['year'];
     }
 
-    public function company()
+    public function company(): HasOne
     {
         return $this->hasOne(Company::class, 'id', 'company_id');
     }

@@ -11,7 +11,7 @@
                             <h1 class="h4 text-gray-900 mb-4">Create a company!</h1>
                         </div>
                         <form class="user"
-                              action="{{ route('company_register_create', app()->getLocale()) }}"
+                              action="{{ route('company_register', app()->getLocale()) }}"
                               method="POST">
                             @csrf
                             <div class="form-group row">
@@ -36,25 +36,19 @@
                                                 class='mr-3'
                                                 src='{{ $country->flag }}'
                                                 alt='{{ $country->name }}'
-                                                width='30px'
-                                                >{{ $country->name }}">
+                                                width='30px'>
+                                                {{ $country->name }}">
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary btn-user btn-block">
-                                Register Account
+                                {{ __('dashboard.company.register company') }}
                             </button>
                             <hr>
                         </form>
                         <hr>
-                        <div class="text-center">
-                            <a class="small" href="forgot-password.html">Forgot Password?</a>
-                        </div>
-                        <div class="text-center">
-                            <a class="small" href="login.html">Already have an account? Login!</a>
-                        </div>
                     </div>
                 </div>
             </div>

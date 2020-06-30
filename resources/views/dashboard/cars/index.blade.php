@@ -2,9 +2,30 @@
 
 @section('content')
 
-    <h1 class="h3 mb-3 text-gray-800">
-        test
-    </h1>
+    <div class="mb-3">
+        <div class="d-flex justify-content-between">
+            <div class="bg-info text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+                {{ auth()->user()->company->cars_counter }}
+                <span>{{ __('dashboard.cars.cars') }}</span>
+            </div>
+            <div class="bg-danger text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+                0
+                <span>{{ __('dashboard.cars.disconnected') }}</span>
+            </div>
+            <div class="bg-success text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+                0
+                <span>{{ __('dashboard.cars.connected') }}</span>
+            </div>
+            <div class="bg-primary text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+                0
+                <span>{{ __('dashboard.cars.moving') }}</span>
+            </div>
+            <div class="bg-secondary text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+                0
+                <span>{{ __('dashboard.cars.parking') }}</span>
+            </div>
+        </div>
+    </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">
@@ -70,6 +91,7 @@
                         <th>{{ __('dashboard.cars.table.gov_number') }}</th>
                         <th>{{ __('dashboard.cars.table.vin_number') }}</th>
                         <th>{{ __('dashboard.cars.table.year') }}</th>
+                        <th>{{ __('dashboard.cars.table.color') }}</th>
                         <th>{{ __('dashboard.general.forms.actions') }}</th>
                     </tr>
                     </thead>
@@ -88,6 +110,7 @@
                             <td>{{ $car->gov_number }}</td>
                             <td>{{ $car->vin_number }}</td>
                             <td>{{ $car->year }}</td>
+                            <td style="height: 1%; background-color: {{ $car->color }}"></td>
                             <td>
                                 <div class="dropdown">
                                     <button class="btn btn-primary dropdown-toggle" type="button"
@@ -98,14 +121,13 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownItemActions">
                                         <form method="POST"
                                               action="{{ route('cars.destroy', [
-                                                    'car' => $car,
                                                     'locale' => app()->getLocale(),
+                                                    'car' => $car,
                                                 ]) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button"
                                                     name="id"
-                                                    value="{{ $car->id }}"
                                                     onclick="callConfirmModal(this)"
                                                     data-title="{{ __('dashboard.general.forms.confirm') }}"
                                                     data-cancel="{{ __('dashboard.general.forms.cancel') }}"

@@ -18,6 +18,16 @@ class DestroyCars extends AbstractBaseService
     {
         $this->validate($data);
 
-        return Car::destroy($data['action']);
+        foreach ($data['action'] as $id) {
+            if (Car::find($id)->company->owner_id !== auth()->user()->id) {
+                return false;
+            }
+        }
+        Car::destroy($data['action']);
+
+        $user = auth()->user();
+        $user->company::updateCarsCounter($user->company_id);
+
+        return true;
     }
 }

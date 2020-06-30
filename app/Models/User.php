@@ -13,6 +13,13 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
+    const LEVEL_ADMIN           = 100;
+    const LEVEL_MODERATOR       = 90;
+    const LEVEL_COMPANY_OWNER   = 50;
+    const LEVEL_COMPANY_MANAGER = 10;
+    const LEVEL_COMPANY_DRIVER  = 0;
+    const LEVEL_UNVERIFIED  = 0;
+
     /**
      * The attributes that are mass assignable.
      *

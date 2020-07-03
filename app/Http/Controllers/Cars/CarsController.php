@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Cars;
 
 use App\Http\Controllers\Controller;
-use App\Models\Car;
+use App\Models\Car\Car;
 use App\Models\Country;
 use App\Services\Cars\CreateCar;
 use App\Services\Cars\DestroyCar;

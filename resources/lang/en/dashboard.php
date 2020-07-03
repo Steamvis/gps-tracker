@@ -73,6 +73,11 @@ return [
     'navigation' => [
         'main' => 'Main',
         'cars' => 'Cars',
-    ]
+    ],
+    ///////////////////////////////////////////////
+    'map'        => [
+        'start route' => 'start of route',
+        'end route'   => 'end of route',
+    ],
     ///////////////////////////////////////////////
 ];

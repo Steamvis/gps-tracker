@@ -11,10 +11,9 @@ class CreateCarsPointsTable extends Migration
         Schema::create('cars_points', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('car_id');
+            $table->unsignedBigInteger('route_id');
             $table->double('latitude');
             $table->double('longitude');
-            $table->string('start_route_time')->nullable();
-            $table->string('end_route_time')->nullable();
             $table->timestamps();
         });
     }

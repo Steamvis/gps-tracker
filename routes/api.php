@@ -18,10 +18,12 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::middleware('api')->prefix('gps')->group(function () {
-    Route::get('/{latitude}/{longitude}/{carInfo}', 'Api\ApiController@updatePoint')
+    Route::get('/{latitude}/{longitude}/{carInfo}/{start_route}_{end_route}', 'Api\ApiController@updatePoint')
         ->name('api.gps')->where([
             'latitude'  => '([0-9]+)\.?([0-9]+)?',
             'longitude' => '([0-9]+)\.?([0-9]+)?',
-            'carInfo' => '^[0-9a-z]{10}\_[0-9]+$'
+            'carInfo' => '^[0-9a-z]{10}\_[0-9]+$',
+            'start_route' => '^(0|1)$',
+            'end_route' => '^(0|1)$',
         ]);
 });

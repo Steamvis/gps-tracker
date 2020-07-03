@@ -1,29 +1,35 @@
 <?php
 
-namespace App;
+namespace App\Models\Car;
 
-use App\Models\CarPoint;
+use App\Models\Car\CarPoint;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class CarRoute extends Model
+class CarRouteSection extends Model
 {
-    public $table = 'cars_routes';
+    public $table = 'cars_route_sections';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'car_id',
+        'route_id',
         'start_point_id',
         'end_point_id',
         'moving_time_ru',
         'moving_time_en'
     ];
 
-    public function getMovingTimeAttribute()
+    public function getMovingTimeAttribute(): string
     {
         $movingTime = 'moving_time_' . app()->getLocale();
         return $this->attributes[$movingTime];
+    }
+
+    public function route(): HasOne
+    {
+        return $this->hasOne(CarRoute::class, 'id', 'route_id');
     }
 
     public function start_point(): HasOne

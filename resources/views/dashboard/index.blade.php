@@ -10,11 +10,68 @@
                     id="mapDropDownMenuButton">
                 Маршруты
             </button>
+            <ul class="list-unstyled map-menu" dropdown="hide">
+                @foreach($cars as $car)
+                    <map-car style="display: none"
+                             data-car-id="{{ $car->id }}"
+                             data-car-name="{{ $car->name_full }}"
+                             data-car-point-image="{{ asset('images/map/car-point.png') }}"
+                             data-car-gov-number="{{ $car->gov_number }}"
+                             data-car-gov-number-translate="{{ __('dashboard.cars.table.gov_number') }}"
+                             data-car-location-latitude="{{ $car->location->latitude }}"
+                             data-car-location-longitude="{{ $car->location->longitude }}">
+                    </map-car>
+                    @foreach ($car->routes as $route)
+                        <li class="map-menu-item">
+                            <a class="map-menu-item__route_link"
+                               data-toggle="collapse"
+                               href="#route-{{ $route->id }}"
+                               aria-expanded="false">
+                                {{ $route->name }}
+                            </a>
+                            <div class="collapse" id="route-{{ $route->id }}">
+                                <div class="card card-body bg-dark border-dark">
+                                    <p>{{ $route->moving_time}}</p>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button class="btn btn-outline-light w-100" type="button"
+                                                    name="map-set-center-button"
+                                                    data-latitude="{{ $route->start->latitude }}"
+                                                    data-longitude="{{ $route->start->longitude }}">
+                                                {{ __('dashboard.map.start route') }}
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-outline-light w-100" type="button"
+                                                    name="map-set-center-button"
+                                                    data-latitude="{{ $route->end->latitude }}"
+                                                    data-longitude="{{ $route->end->longitude }}">
+                                                {{ __('dashboard.map.end route') }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <map-sections style="display: none" data-route-id="{{ $route->id }}">
+                                @foreach($route->sections as $section)
+                                    <section
+                                        data-id="{{ $section->id }}"
+                                        data-start-point-latitude="{{ $section->start_point->latitude }}"
+                                        data-start-point-longitude="{{ $section->start_point->longitude }}"
+                                        data-end-point-latitude="{{ $section->end_point->latitude }}"
+                                        data-end-point-longitude="{{ $section->end_point->longitude }}"
+                                        data-moving-time="{{ $section->moving_time }}">
+                                    </section>
+                                @endforeach
+                            </map-sections>
+                        </li>
+                    @endforeach
+                @endforeach
+            </ul>
         </div>
     </div>
 @endsection
-
 
 <style>
     .map-header-menu {
@@ -48,7 +105,15 @@
         background-color: rgba(0, 0, 0, 0.36);
     }
 
-    .map-menu a {
+    .map-menu .map-menu-item {
+        padding: 5px;
+    }
+
+    .map-menu .map-menu-item__route_link {
+        color: white;
+    }
+
+    .map-menu .map-menu-item__route_link:hover {
         color: white;
     }
 
@@ -57,117 +122,119 @@
 @section('scripts')
     @php($mapLink = 'https://api-maps.yandex.ru/2.1/?apikey=' . env('YANDEX_MAP_API_KEY') . '&lang=' . app()->getLocale() . '_RU')
     <script src="{{ $mapLink }}"></script>
+    <script>
+        jQuery('#mapDropDownMenuButton').on('click', function (event) {
+            let menu = jQuery('.map-menu');
 
+            if (menu.attr('dropdown') === 'hide') {
+                menu.attr('dropdown', 'visible')
+                menu.animate({
+                    height: '500px',
+                })
+            } else {
+                menu.attr('dropdown', 'hide').animate({
+                    height: 0,
+                })
+            }
+        })
+    </script>
     <script>
         ymaps.ready(init);
 
         function init() {
             let myMap = new ymaps.Map("map", {
-                    center: [55.76, 37.64],
-                    zoom: 7,
-                    controls: []
-                }),
-                routes = [],
-                menu = jQuery('<ol class="map-menu"  dropdown="hide"></ol>');
+                center: [55.76, 37.64],
+                zoom: 7,
+                controls: []
+            })
 
-                @foreach($routes as $route)
-                {{--                @dd($route->start_point->id, $route->end_point->id)--}}
-                {{--let point{{ $route->start_point->id }} = new ymaps.Placemark([--}}
-                {{--        {{ $route->start_point->id }}--}}
-                {{--    ], {--}}
-                {{--    hintContent: 'Собственный значок метки с контентом',--}}
-                {{--    balloonContent: 'А эта — новогодняя',--}}
-                {{--    iconContent: ''--}}
-                {{--});--}}
+            let myIconContentLayout = ymaps.templateLayoutFactory.createClass(
+                '<div style="color: #FFFFFF; font-weight: bold;">$[properties.iconContent]</div>'
+            );
 
-                {{--myMap.geoObjects.add(point{{ $route->start_point->id }});--}}
+            let routesHTML = document.querySelectorAll('map-sections'),
+                routesMAP = new ymaps.GeoObjectCollection(null),
+                carsHTML = document.querySelectorAll('map-car'),
+                carsMAP = new ymaps.GeoObjectCollection(null);
 
-            let route{{ $route->id }} = new ymaps.GeoObjectCollection(null);
-
-            route{{ $route->id }}.add(new ymaps.Polyline([
-                [{{ $route->start_point->latitude }}, {{ $route->start_point->longitude }}],
-                [{{ $route->end_point->latitude }}, {{ $route->end_point->longitude }}]
-            ], {
-                // balloonContentHeader: "test",
-                balloonContentHeader: "{{"{$route->start_point->car->brand->name} {$route->start_point->car->name} {$route->start_point->car->gov_number}"}}",
-                balloonContent: "{{ $route->moving_time }}"
-            }, {
-                balloonCloseButton: false,
-                strokeColor: "#2c56c1",
-                strokeWidth: 6,
-                strokeOpacity: .6
-            }))
-
-            myMap.geoObjects.add(route{{ $route->id }});
-            routes.push(route{{ $route->id }})
-
-            @endforeach
-
-            function createMenuGroup(coords, name = 'test') {
-                let menuItem = jQuery(
-                    '<li>' +
-                    '<a href="#" name="__map-route__menu-link"' +
-                    'data-latitude="' + coords.latitude + '" ' +
-                    'data-longitude="' + coords.longitude + '"' +
-                    '>' + name + '</a>' +
-                    '</li>'
-                );
-
-                menuItem
-                    .appendTo(menu)
-                    .find('a');
-            }
+            carsHTML.forEach(function (carHTML) {
+                let ID = carHTML.getAttribute('data-car-id'),
+                    name = carHTML.getAttribute('data-car-name'),
+                    govNumber = carHTML.getAttribute('data-car-gov-number'),
+                    translate = carHTML.getAttribute('data-car-gov-number-translate'),
+                    image = carHTML.getAttribute('data-car-point-image'),
+                    location = {
+                        latitude: carHTML.getAttribute('data-car-location-latitude'),
+                        longitude: carHTML.getAttribute('data-car-location-longitude')
+                    };
 
 
-            routes.forEach(function (geoObjectCollection) {
-
-                geoObjectCollection.each(function (geoObject) {
-                    let data = geoObject.properties._data,
-                        bounds = geoObjectCollection.getBounds(),
-                        coords = {
-                            latitude: bounds[1][0],
-                            longitude: bounds[1][1],
-                        },
-                        name = data.balloonContent
-
-                    createMenuGroup(coords, name)
-                })
+                carsMAP.add(new ymaps.Placemark(
+                    [location.latitude, location.longitude],
+                    {
+                        balloonContent: '<strong>' + name + '</strong><br>' + translate + ': ' + govNumber + ''
+                    },
+                    {
+                        iconLayout: 'default#image',
+                        iconImageSize: [50, 50],
+                        iconImageOffset: [-10, -30],
+                        iconImageHref: image,
+                    }
+                ))
             });
 
-            menu.appendTo(jQuery('.map-header-menu'));
+            routesHTML.forEach(function (routeHTML) {
+                let routeID = routeHTML.getAttribute('data-route-id'),
+                    sectionsHTML = routeHTML.getElementsByTagName('section');
 
-оли            function setCenter(coords, map) {
-                map.setCenter(coords, 15);
-            }
+                for (sectionHTML of sectionsHTML) {
+                    let sectionID = sectionHTML.getAttribute('data-id'),
+                        movingTime = sectionHTML.getAttribute('data-moving-time'),
+                        startPoint = {
+                            latitude: sectionHTML.getAttribute('data-start-point-latitude'),
+                            longitude: sectionHTML.getAttribute('data-start-point-longitude')
+                        },
+                        endPoint = {
+                            latitude: sectionHTML.getAttribute('data-end-point-latitude'),
+                            longitude: sectionHTML.getAttribute('data-end-point-longitude')
+                        };
 
-            jQuery('[name=__map-route__menu-link]').on('click', function (event) {
-                event.preventDefault();
-                let button = event.target,
-                    latitude = button.getAttribute('data-latitude'),
-                    longitude = button.getAttribute('data-longitude'),
-                    coords = [latitude, longitude];
 
-                setCenter(coords, myMap);
-            })
-
-            jQuery('#mapDropDownMenuButton').on('click', function (event) {
-                let menu = jQuery('.map-menu');
-
-                if (menu.attr('dropdown') === 'hide') {
-                    menu.attr('dropdown', 'visible')
-                    menu.animate({
-                        height: '500px',
-                        paddingTop: '20px',
-                        paddingleft: '50px'
-                    })
-                } else {
-                    menu.attr('dropdown', 'hide').animate({
-                        height: 0,
-                        paddingTop: '0',
-                        paddingleft: '0'
-                    })
+                    routesMAP.add(new ymaps.Polyline([
+                        [startPoint.latitude, startPoint.longitude],
+                        [endPoint.latitude, endPoint.longitude],
+                    ], {
+                        balloonContentHeader: "",
+                        balloonContent: movingTime
+                    }, {
+                        balloonCloseButton: false,
+                        strokeColor: "#2c56c1",
+                        strokeWidth: 6,
+                        strokeOpacity: .6
+                    }))
                 }
             })
+
+            myMap.geoObjects
+                .add(routesMAP)
+                .add(carsMAP)
+
+            // functions
+            function setCenter(coords) {
+                myMap.setCenter(coords);
+            }
+
+            let mapSetCenterButtons = jQuery('[name=map-set-center-button]');
+
+            mapSetCenterButtons.on('click', function (event) {
+                let coords = [
+                    event.target.getAttribute('data-latitude'),
+                    event.target.getAttribute('data-longitude')
+                ]
+
+                setCenter(coords)
+            })
+
         }
     </script>
 @endsection

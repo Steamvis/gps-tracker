@@ -16,6 +16,7 @@ class CreateCarsTable extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->string('color', 7)->nullable();
             $table->string('name');
+            $table->string('api_code',10)->unique();
             $table->char('year', 4)->nullable();
             $table->string('vin_number')->nullable();
             $table->string('gov_number')->nullable();

@@ -4,23 +4,28 @@
 
     <div class="mb-3">
         <div class="d-flex justify-content-between">
-            <div class="bg-info text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+            <div
+                class="bg-info text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
                 {{ auth()->user()->company->cars_counter }}
                 <span>{{ __('dashboard.cars.cars') }}</span>
             </div>
-            <div class="bg-danger text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+            <div
+                class="bg-danger text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
                 0
                 <span>{{ __('dashboard.cars.disconnected') }}</span>
             </div>
-            <div class="bg-success text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+            <div
+                class="bg-success text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
                 0
                 <span>{{ __('dashboard.cars.connected') }}</span>
             </div>
-            <div class="bg-primary text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+            <div
+                class="bg-primary text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
                 0
                 <span>{{ __('dashboard.cars.moving') }}</span>
             </div>
-            <div class="bg-secondary text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+            <div
+                class="bg-secondary text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
                 0
                 <span>{{ __('dashboard.cars.parking') }}</span>
             </div>
@@ -86,8 +91,7 @@
                         <th>{{ __('dashboard.cars.table.name') }}</th>
                         <th>{{ __('dashboard.cars.table.brand_name') }}</th>
                         <th>{{ __('dashboard.cars.table.location') }}</th>
-                        <th>{{ __('dashboard.cars.table.driver') }}</th>
-                        <th>{{ __('dashboard.cars.table.manager') }}</th>
+                        <th>{{ __('dashboard.cars.table.api_key') }}</th>
                         <th>{{ __('dashboard.cars.table.gov_number') }}</th>
                         <th>{{ __('dashboard.cars.table.vin_number') }}</th>
                         <th>{{ __('dashboard.cars.table.year') }}</th>
@@ -105,8 +109,7 @@
                             <td>{{ $car->name }}</td>
                             <td>{{ $car->brand->name }}</td>
                             <td>location</td>
-                            <td>driver</td>
-                            <td>manager</td>
+                            <td>{{ $car->api_code }}</td>
                             <td>{{ $car->gov_number }}</td>
                             <td>{{ $car->vin_number }}</td>
                             <td>{{ $car->year }}</td>

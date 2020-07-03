@@ -22,11 +22,13 @@ const checkboxes = document.querySelectorAll('#dataTable input[type=checkbox]');
 
 function checkAll() {
     checkboxes.forEach(input => input.checked = true)
+    // TODO fix button
     allowButton(true)
 }
 
 function unCheckAll() {
     checkboxes.forEach(input => input.checked = false)
+    // TODO fix button
     allowButton(false)
 }
 

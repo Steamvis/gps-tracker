@@ -50,6 +50,7 @@ return [
             'location'    => 'Location',
             'description' => 'Description',
             'color'       => 'color',
+            'api_key'     => 'api key',
         ],
         'CRUD'         => [
             'create' => 'Create transport',

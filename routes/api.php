@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+
+Route::middleware('api')->prefix('gps')->group(function () {
+    Route::get('/{latitude}/{longitude}/{carInfo}', 'Api\ApiController@updatePoint')
+        ->name('api.gps')->where([
+            'latitude'  => '([0-9]+)\.?([0-9]+)?',
+            'longitude' => '([0-9]+)\.?([0-9]+)?',
+            'carInfo' => '^[0-9a-z]{10}\_[0-9]+$'
+        ]);
 });

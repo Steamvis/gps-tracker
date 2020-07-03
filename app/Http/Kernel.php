@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\Company;
 use App\Http\Middleware\EnsureEmailsVerified;
+use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Middleware\Locale;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -47,6 +48,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            ForceJsonResponse::class,
         ],
     ];
 

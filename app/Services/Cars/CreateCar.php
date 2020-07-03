@@ -5,6 +5,7 @@ namespace App\Services\Cars;
 use App\Models\Car;
 use App\Models\Company;
 use App\Services\AbstractBaseService;
+use Illuminate\Support\Str;
 
 class CreateCar extends AbstractBaseService
 {
@@ -26,6 +27,9 @@ class CreateCar extends AbstractBaseService
     public function execute(array $data): Car
     {
         $this->validate($data);
+
+        $code = ['api_code' => Str::limit(sha1(time() . env('APP_KEY') , rand(0,100)), 10, '')];
+        $data = array_merge($data, $code);
 
         $car = Car::create($data);
 

@@ -35,3 +35,4 @@ Route::group([
     ]);
     Route::delete('destroy', 'Cars\CarsController@destroyMany')->name('cars.destroy.many');
 });
+

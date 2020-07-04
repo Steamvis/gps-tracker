@@ -13,9 +13,6 @@ class DashboardController extends Controller
     {
         $cars = Car::whereHas('points')->where('company_id', auth()->user()->company_id)->get();
 
-
-
-
 //        $routes = CarRoute::with(['sections.start_point', 'sections.end_point'])->get();
 
 //            CarPoint::whereIn(''id', $route->sections->pluck('start_point_id')

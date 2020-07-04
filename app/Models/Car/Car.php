@@ -2,6 +2,7 @@
 
 namespace App\Models\Car;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -23,6 +24,13 @@ class Car extends Model
         'description',
         'api_code',
     ];
+
+    public function getMovingTimeAttribute()
+    {
+        $lastRoute = $this->routes->last();
+        $interval  = Carbon::parse($lastRoute->end_time)->diffAsCarbonInterval(Carbon::parse($lastRoute->start_time));
+        return $interval->locale(app()->getLocale())->forHumans();
+    }
 
     public function getVinNumberAttribute(): string
     {
@@ -82,5 +90,10 @@ class Car extends Model
     public function points(): HasMany
     {
         return $this->hasMany(CarPoint::class);
+    }
+
+    public function isCurrentRoute(int $id): bool
+    {
+        return $this->routes->last()->id === $id;
     }
 }

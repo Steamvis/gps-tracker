@@ -74,7 +74,13 @@ class DemoUserSeeder extends Seeder
                 'name'       => 'Финляндия аэропорт - Торговый центр',
                 'car_id'     => 1,
                 'start_time' => Carbon::create(2020, 4, 7, 15, 43, 15),
-                'end_time'   => Carbon::create(2020, 4, 8, 16, 4, 10),
+                'end_time'   => Carbon::create(2020, 4, 8, 16, 20, 20),
+            ],
+            [
+                'name'       => 'аэропорт - Торговый центр',
+                'car_id'     => 2,
+                'start_time' => Carbon::create(2020, 4, 7, 1, 43, 15),
+                'end_time'   => Carbon::create(2020, 4, 10, 16, 4, 10),
             ]
         ];
         $carsPointsRoute1    = [
@@ -560,14 +566,297 @@ class DemoUserSeeder extends Seeder
                 'longitude'  => 28.221956,
                 'created_at' => Carbon::create(2020, 4, 8, 16, 4, 10),
             ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.044028,
+                'longitude'  => 28.222423,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 10, 10),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.043362,
+                'longitude'  => 28.222225,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 12, 12),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.043085,
+                'longitude'  => 28.221917,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 12, 50),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.042059,
+                'longitude'  => 28.220076,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 13, 40),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.040918,
+                'longitude'  => 28.222918,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 15, 0),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.040810,
+                'longitude'  => 28.222962,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 15, 10),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.040742,
+                'longitude'  => 28.223198,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 15, 20),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.040636,
+                'longitude'  => 28.223868,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 15, 20),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.040006,
+                'longitude'  => 28.226363,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 15, 59),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.039468,
+                'longitude'  => 28.228687,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 16, 30),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.039365,
+                'longitude'  => 28.228850,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 16, 40),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.039363,
+                'longitude'  => 28.229075,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 16, 50),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.039282,
+                'longitude'  => 28.229840,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 16, 59),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.038680,
+                'longitude'  => 28.232445,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 17, 20),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.035395,
+                'longitude'  => 28.242065,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 18, 20),
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 2,
+                'latitude'   => 61.026474,
+                'longitude'  => 28.256142,
+                'created_at' => Carbon::create(2020, 4, 8, 16, 20, 20),
+            ],
+        ];
+        $cars2PointsRoute    = [
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.417472,
+                'longitude'  => 24.796557,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 43, 15),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.417156,
+                'longitude'  => 24.796432,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 44, 0),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.417120,
+                'longitude'  => 24.796286,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 44, 10),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.417146,
+                'longitude'  => 24.795541,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 44, 40),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.424074,
+                'longitude'  => 24.785962,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 47, 4),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.424478,
+                'longitude'  => 24.785190,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 47, 50),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.426166,
+                'longitude'  => 24.780889,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 48, 40),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.427456,
+                'longitude'  => 24.778341,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 48, 59),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.431438,
+                'longitude'  => 24.768935,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 49, 5),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.432659,
+                'longitude'  => 24.763844,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 51, 5),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.433181,
+                'longitude'  => 24.763603,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 51, 30),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.435332,
+                'longitude'  => 24.764662,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 52, 10),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.437446,
+                'longitude'  => 24.764684,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 53, 20),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.439973,
+                'longitude'  => 24.763677,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 55, 40),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.441610,
+                'longitude'  => 24.764338,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 56, 30),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.442441,
+                'longitude'  => 24.763959,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 57, 30),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.442900,
+                'longitude'  => 24.766275,
+                'created_at' => Carbon::create(2020, 4, 7, 1, 58, 20),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.443225,
+                'longitude'  => 24.767324,
+                'created_at' => Carbon::create(2020, 4, 7, 14, 5, 45),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.443539,
+                'longitude'  => 24.769478,
+                'created_at' => Carbon::create(2020, 4, 7, 14, 10, 45),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.444025,
+                'longitude'  => 24.770079,
+                'created_at' => Carbon::create(2020, 4, 7, 15, 21, 30),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.446860,
+                'longitude'  => 24.773567,
+                'created_at' => Carbon::create(2020, 4, 7, 15, 30, 30),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.450426,
+                'longitude'  => 24.780650,
+                'created_at' => Carbon::create(2020, 4, 7, 15, 35, 32),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.453153,
+                'longitude'  => 24.781886,
+                'created_at' => Carbon::create(2020, 4, 7, 15, 37, 32),
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 3,
+                'latitude'   => 59.605537,
+                'longitude'  => 24.687803,
+                'created_at' => Carbon::create(2020, 4, 7, 16, 10, 54),
+            ],
         ];
 
 
         DB::table('cars_routes')->insert($carsRoutes);
-        DB::table('cars_points')->insert($carsPointsRoute2);
-        DB::table('cars_points')->insert($carsPointsRoute1);
-        DB::table('cars_points')->insert($carsPointsRoute2end);
-        DB::table('cars_points')->insert($carsPointsRoute1end);
+        DB::table('cars_points')->insert($carsPointsRoute2);    // 1car
+        DB::table('cars_points')->insert($carsPointsRoute1);    // 1 car
+        DB::table('cars_points')->insert($cars2PointsRoute);    // 2 car
+        DB::table('cars_points')->insert($carsPointsRoute2end); // 1car
+        DB::table('cars_points')->insert($carsPointsRoute1end); // 1car
 
 
         foreach ($carsRoutes as $index => $value) {

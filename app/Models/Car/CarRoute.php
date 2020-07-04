@@ -18,14 +18,15 @@ class CarRoute extends Model
         'end_time'
     ];
 
-    public function getMovingTimeAttribute()
+    public function getMovingTimeAttribute(): string
     {
-        $format    = 'm-d H:i';
+        $format    = 'Y-m-d H:i';
         $startTime = Carbon::parse($this->attributes['start_time'])->format($format);
         $endTime   = Carbon::parse($this->attributes['end_time'])->format($format);
 
         return "{$startTime} - {$endTime}";
     }
+
 
     public function getStartAttribute(): object
     {

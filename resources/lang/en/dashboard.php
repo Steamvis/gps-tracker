@@ -76,8 +76,12 @@ return [
     ],
     ///////////////////////////////////////////////
     'map'        => [
-        'start route' => 'start of route',
-        'end route'   => 'end of route',
+        'routes'          => 'Routes',
+        'start route'     => 'Start of route',
+        'end route'       => 'End of route',
+        'km'              => 'km',
+        'current route'   => 'Current',
+        'time on the way' => 'Time on the way'
     ],
     ///////////////////////////////////////////////
 ];

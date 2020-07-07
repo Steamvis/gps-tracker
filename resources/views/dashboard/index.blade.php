@@ -5,9 +5,7 @@
         <div style="height: 85vh; width: 100vw" id="map">
         </div>
         <div class="map-header-menu">
-            <h2 id="__car_name">
-                s
-            </h2>
+            <h2 id="__car_name"></h2>
             <button class="btn btn-light dropdown-toggle" type="button"
                     id="mapDropDownMenuButton">{{ __('dashboard.cars.cars') }}
             </button>
@@ -17,7 +15,7 @@
                         <a class="map-menu-item__car_link py-3 px-3 bg-light card-link text-dark d-block position-relative"
                            data-toggle="collapse"
                            href="#car-{{ $car->id }}"
-                           aria-expanded="false">{{ $car->name_full }} {{ $car->gov_number }}
+                           aria-expanded="false"><span>{{ $car->name_full }} {{ $car->gov_number }}</span>
                             <img class="position-absolute" src="{{ $car->brand->image }}" width="100px"
                                  style="right: 0; top: 0" alt="brand-logo">
                         </a>
@@ -32,7 +30,8 @@
                                  data-car-location-longitude="{{ $car->location->longitude }}">
                         </map-car>
 
-                        <div class="collapse bg-light rounded" id="car-{{ $car->id }}">
+                        <div class="collapse bg-light rounded" id="car-{{ $car->id }}"
+                             data-target="map-menu-collapse-car-block">
                             <ol class="p-0">
                                 <div class="d-flex justify-content-between bg-primary text-center rounded-0">
                                     <div class="w-100 py-2 px-1"
@@ -60,6 +59,7 @@
                                         <a class="map-menu-item__route_link mb-2"
                                            data-toggle="collapse"
                                            href="#route-{{ $route->id }}"
+                                           data-route-id="{{ $route->id }}"
                                            aria-expanded="false">
                                             {{ $route->name }}
                                             <span class="badge bg-gradient-primary text-white"
@@ -67,7 +67,7 @@
                                                     {{ __('dashboard.map.km') }}
                                             </span>
                                             @if($car->isCurrentRoute($route->id))
-                                                <span class="badge bg-gradient-success text-white">
+                                                <span class="badge bg-gradient-success text-white" data-route="current">
                                                     {{ __('dashboard.map.current route') }}
                                                 </span>
                                             @endif
@@ -175,19 +175,22 @@
         })
     </script>
     <script>
+        let carMapMenuLink = document.querySelectorAll('a.map-menu-item__car_link'),
+            carMapMenuCollapses = document.querySelectorAll('li.map-menu-item div[data-target=map-menu-collapse-car-block]')
+
         ymaps.ready(init);
 
         function init() {
-            let myMap = new ymaps.Map("map", {
+            var myMap = new ymaps.Map("map", {
                 center: [55.76, 37.64],
                 zoom: 7,
                 controls: []
             })
 
-            let routesHTML = document.querySelectorAll('map-sections'),
-                routesMAP = new ymaps.GeoObjectCollection(null),
+            var routesHTML = document.querySelectorAll('map-sections'),
                 carsHTML = document.querySelectorAll('map-car'),
-                carsMAP = new ymaps.GeoObjectCollection(null);
+                carsMAP = new ymaps.GeoObjectCollection(null),
+                routesMAP = new ymaps.GeoObjectCollection(null)
 
             carsHTML.forEach(function (carHTML) {
                 let ID = carHTML.getAttribute('data-car-id'),
@@ -199,7 +202,6 @@
                         latitude: carHTML.getAttribute('data-car-location-latitude'),
                         longitude: carHTML.getAttribute('data-car-location-longitude')
                     };
-
 
                 carsMAP.add(new ymaps.Placemark(
                     [location.latitude, location.longitude],
@@ -219,7 +221,8 @@
             routesHTML.forEach(function (routeHTML) {
                 let routeID = routeHTML.getAttribute('data-route-id'),
                     routeLength = 0,
-                    sectionsHTML = routeHTML.getElementsByTagName('section');
+                    sectionsHTML = routeHTML.getElementsByTagName('section'),
+                    isCurrentRoute = routeHTML.parentNode.querySelector('span[data-route=current]') !== null
 
                 for (sectionHTML of sectionsHTML) {
                     let sectionID = sectionHTML.getAttribute('data-id'),
@@ -233,7 +236,6 @@
                             sectionHTML.getAttribute('data-end-point-longitude')
                         ];
 
-
                     let distance = ymaps.formatter.distance(ymaps.coordSystem.geo.getDistance(startPoint, endPoint)),
                         length = '(^.*)&#',
                         valueName = ';(.*$)';
@@ -243,28 +245,27 @@
                         valueName: distance.match(valueName)[1]
                     }
 
-                    routesMAP.add(new ymaps.Polyline([
-                        startPoint,
-                        endPoint,
-                    ], {
-                        balloonContentHeader: movingTime,
-                        balloonContent: distance.length + ' ' + distance.valueName
-                    }, {
-                        balloonCloseButton: false,
-                        strokeColor: "#2c56c1",
-                        strokeWidth: 6,
-                        strokeOpacity: .6
-                    }))
-
-
                     if (distance.valueName === 'm' || distance.valueName === 'м') {
                         distance.length = distance.length / 1000
                     }
 
                     routeLength = Number(routeLength) + Number(distance.length);
+
+                    // display only the current route
+                    if (isCurrentRoute) {
+                        routesMAP.add(getPolylinesCollection({
+                            startPoint: startPoint,
+                            endPoint: endPoint,
+                            movingTime: movingTime,
+                            distance: {
+                                length: distance.length,
+                                valueName: distance.valueName
+                            }
+                        }))
+                    }
                 }
 
-                const routeLengthElement = document.getElementsByName('map_route_length-' + routeID)
+                let routeLengthElement = document.getElementsByName('map_route_length-' + routeID)
                 routeLengthElement[0].prepend(routeLength.toFixed(1))
             })
 
@@ -272,7 +273,25 @@
                 .add(routesMAP)
                 .add(carsMAP)
 
+            ////////////////////////////////////////////////////////////////////////////////
             // functions
+            ////////////////////////////////////////////////////////////////////////////////
+
+            function getPolylinesCollection(section) {
+                return new ymaps.Polyline([
+                    section.startPoint,
+                    section.endPoint,
+                ], {
+                    balloonContentHeader: section.movingTime,
+                    balloonContent: section.distance.length + ' ' + section.distance.valueName
+                }, {
+                    balloonCloseButton: false,
+                    strokeColor: "#2c56c1",
+                    strokeWidth: 6,
+                    strokeOpacity: .6
+                })
+            }
+
             function setCenter(coords) {
                 myMap.setCenter(coords, 17);
             }
@@ -287,6 +306,90 @@
 
                 setCenter(coords)
             })
+
+            carMapMenuLink.forEach(link => {
+                let parent = link.parentNode,
+                    routeMAP = new ymaps.GeoObjectCollection(null)
+
+                // click on car link
+                link.onclick = function (event) {
+                    let carInfo = parent.querySelector('map-car'),
+                        car = {
+                            name: carInfo.getAttribute('data-car-name'),
+                            id: carInfo.getAttribute('data-car-id'),
+                            number: carInfo.getAttribute('data-car-gov-number')
+                        },
+                        routes = parent.querySelectorAll('a.map-menu-item__route_link'),
+                        routeLength = 0
+
+                    routes.forEach(routeLink => {
+                        // click on route link
+                        routeLink.onclick = function (event) {
+                            // myMap.geoObjects.removeAll()
+                            console.log('click on route')
+
+                            let link = event.target,
+                                routeID = link.getAttribute('data-route-id'),
+                                route = parent.querySelector('map-sections[data-route-id="' + routeID + '"]'),
+                                routeSections = route.querySelectorAll('section');
+
+                            routeSections.forEach(section => {
+                                let movingTime = section.getAttribute('data-moving-time'),
+                                    startPoint = [
+                                        section.getAttribute('data-start-point-latitude'),
+                                        section.getAttribute('data-start-point-longitude')
+                                    ],
+                                    endPoint = [
+                                        section.getAttribute('data-end-point-latitude'),
+                                        section.getAttribute('data-end-point-longitude')
+                                    ],
+                                    distance = ymaps.formatter.distance(ymaps.coordSystem.geo.getDistance(startPoint, endPoint)),
+                                    length = '(^.*)&#',
+                                    valueName = ';(.*$)';
+
+                                distance = {
+                                    length: distance.match(length)[1],
+                                    valueName: distance.match(valueName)[1]
+                                }
+
+                                if (distance.valueName === 'm' || distance.valueName === 'м') {
+                                    distance.length = distance.length / 1000
+                                }
+
+                                routeLength = Number(routeLength) + Number(distance.length);
+
+                                routeMAP.add(getPolylinesCollection({
+                                    startPoint: startPoint,
+                                    endPoint: endPoint,
+                                    movingTime: movingTime,
+                                    distance: {
+                                        length: distance.length,
+                                        valueName: distance.valueName
+                                    }
+                                }))
+                            })
+                        }
+                    })
+
+                    myMap.geoObjects
+                        .add(routeMAP)
+
+                    function setCarNameOnMap() {
+                        document.getElementById('__car_name').textContent = car.name + ' ' + car.number
+                    }
+
+                    setCarNameOnMap()
+
+                    carMapMenuCollapses.forEach(collapseBlock => {
+                        let currentCollapseBlock = parent.querySelector('div[data-target=map-menu-collapse-car-block]')
+
+                        if (collapseBlock !== currentCollapseBlock) {
+                            collapseBlock.classList.remove('show')
+                        }
+                    })
+                }
+            })
+
         }
     </script>
 @endsection

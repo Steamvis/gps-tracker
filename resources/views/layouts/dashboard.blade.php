@@ -17,17 +17,12 @@
 
 <body id="page-top">
 
-<!-- Page Wrapper -->
 <div id="wrapper">
 
-    <!-- Sidebar -->
 @include('dashboard.sidebar')
-<!-- End of Sidebar -->
 
-    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Main Content -->
         <div id="content">
 
             @include('navigation.dashboard_navigation')
@@ -40,7 +35,6 @@
 
 </div>
 
-<!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">

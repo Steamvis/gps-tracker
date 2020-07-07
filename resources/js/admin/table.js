@@ -1,23 +1,3 @@
-function callConfirmModal(button) {
-    let form = button.parentNode,
-        title = button.getAttribute('data-title'),
-        confirm = button.getAttribute('data-confirm'),
-        cancel = button.getAttribute('data-cancel');
-    Swal.fire({
-        title: title,
-        icon: 'warning',
-        showCancelButton: true,
-        focusCancel: true,
-        confirmButtonColor: '#d33',
-        cancelButtonText: cancel,
-        confirmButtonText: confirm,
-    }).then(function (request) {
-        if (request.value) {
-            form.submit()
-        }
-    });
-}
-
 var tbodyQuerySelector = 'table[id=dataTable] tbody';
 
 var tbody = document.querySelector(tbodyQuerySelector),
@@ -98,3 +78,4 @@ function unCheckAll() {
         highlight(value, false, false)
     })
 }
+

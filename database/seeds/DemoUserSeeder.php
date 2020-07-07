@@ -213,6 +213,13 @@ class DemoUserSeeder extends Seeder
             [
                 'car_id'     => 1,
                 'route_id'   => 1,
+                'latitude'   => 54.701613,
+                'longitude'  => 20.521247,
+                'created_at' => Carbon::create(2020, 3, 9, 15, 44, 45)
+            ],
+            [
+                'car_id'     => 1,
+                'route_id'   => 1,
                 'latitude'   => 54.701510,
                 'longitude'  => 20.521851,
                 'created_at' => Carbon::create(2020, 3, 9, 15, 45, 30)

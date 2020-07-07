@@ -12,6 +12,7 @@ class CreateCarsPointsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('car_id');
             $table->unsignedBigInteger('route_id');
+            $table->unsignedBigInteger('section_id')->nullable();;
             $table->double('latitude');
             $table->double('longitude');
             $table->timestamps();

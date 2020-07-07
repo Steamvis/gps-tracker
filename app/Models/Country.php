@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Car\CarMark;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
 

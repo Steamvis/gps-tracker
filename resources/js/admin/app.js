@@ -62,3 +62,5 @@ require('bootstrap-select/dist/js/bootstrap-select.min');
     });
 
 })(jQuery); // End of use strict
+
+

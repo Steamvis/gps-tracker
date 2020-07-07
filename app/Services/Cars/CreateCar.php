@@ -2,9 +2,10 @@
 
 namespace App\Services\Cars;
 
-use App\Models\Car;
+use App\Models\Car\Car;
 use App\Models\Company;
 use App\Services\AbstractBaseService;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class CreateCar extends AbstractBaseService
@@ -28,12 +29,12 @@ class CreateCar extends AbstractBaseService
     {
         $this->validate($data);
 
-        $code = ['api_code' => Str::limit(sha1(time() . env('APP_KEY') , rand(0,100)), 10, '')];
+        $code = ['api_code' => sha1(time() . env('APP_KEY') . Car::get()->last()->id)];
         $data = array_merge($data, $code);
 
         $car = Car::create($data);
 
-        Company::updateCarsCounter($car->company_id);
+        Company::updateCarsCounter($car->company);
 
         return Car::find($car->id);
     }

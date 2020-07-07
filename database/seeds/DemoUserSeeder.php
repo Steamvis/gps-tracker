@@ -1,12 +1,13 @@
 <?php
 
+use App\Models\Car\Car;
 use App\Models\Car\CarRoute;
 use App\Models\Car\CarRouteSection;
-use App\Models\Car\CarPoint;
+use App\Models\Car\PointsSection;
+use App\Models\Company;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class DemoUserSeeder extends Seeder
 {
@@ -32,12 +33,13 @@ class DemoUserSeeder extends Seeder
         $company = [
             'owner_id'      => 1,
             'country_id'    => 24,
-            'cars_counter'  => 2,
+            'cars_counter'  => 3,
             'staff_counter' => 1,
             'title'         => 'demoCompany',
         ];
         DB::table('companies')->insert($company);
         User::find(1)->update(['company_id' => 1]);
+
 
         $cars = [
             [
@@ -47,23 +49,120 @@ class DemoUserSeeder extends Seeder
                 'company_id' => 1,
                 'color'      => '#2f80ed',
                 'vin_number' => 'WDDNF9EB8DA526479',
-                'gov_number' => 'X9999XE777',
-                'api_code'   => Str::limit(sha1(time() . env('APP_KEY') . 1), 10, ''),
+                'gov_number' => 'X999XE777',
+                'api_code'   => sha1(time() . env('APP_KEY') . 1),
             ],
             [
-                'name'       => 'TGX',
+                'name'       => 'FH',
                 'year'       => 2020,
-                'mark_id'    => 22,
+                'mark_id'    => 26,
                 'company_id' => 1,
-                'color'      => '#2f80ed',
+                'color'      => '#ffffed',
                 'vin_number' => 'XUUYA755JF000015E',
-                'gov_number' => 'A4567OH777',
-                'api_code'   => Str::limit(sha1(time() . env('APP_KEY') . 2), 10, ''),
+                'gov_number' => 'A457OH777',
+                'api_code'   => sha1(now() . env('APP_KEY') . 2)
+            ],
+            [
+                'name'       => '1840',
+                'year'       => 2019,
+                'mark_id'    => 23,
+                'company_id' => 1,
+                'color'      => '#2f80bb',
+                'vin_number' => 'XUYTA744JF012515B',
+                'gov_number' => 'Е444КХ50',
+                'api_code'   => sha1(time() . env('APP_KEY') . 3),
+            ],
+            [
+                'name'       => 'TOTAL',
+                'year'       => 2019,
+                'mark_id'    => 12,
+                'company_id' => 1,
+                'color'      => '#2f80bb',
+                'vin_number' => 'BEYTA744JF012515B',
+                'gov_number' => 'Х453ХК126',
+                'api_code'   => sha1(time() . env('APP_KEY') . 4),
+            ],
+            [
+                'name'       => 'turismo',
+                'year'       => 2001,
+                'mark_id'    => 11,
+                'company_id' => 1,
+                'color'      => '#2f80bb',
+                'vin_number' => 'XUYTL744JF012515B',
+                'gov_number' => 'Н444КХ40',
+                'api_code'   => sha1(time() . env('APP_KEY') . 5),
+            ],
+            [
+                'name'       => 'XF 105',
+                'year'       => 2009,
+                'mark_id'    => 15,
+                'company_id' => 1,
+                'color'      => '#2f80bb',
+                'vin_number' => 'XUYTL744JF012515B',
+                'gov_number' => '',
+                'api_code'   => sha1(time() . env('APP_KEY') . 6),
+            ],
+            [
+                'name'       => 'XF 106',
+                'year'       => 2009,
+                'mark_id'    => 15,
+                'company_id' => 1,
+                'color'      => '#2f80bb',
+                'vin_number' => 'XUYTL744JF012515B',
+                'gov_number' => '',
+                'api_code'   => sha1(time() . env('APP_KEY') . 7),
+            ],
+            [
+                'name'       => 'XF 109',
+                'year'       => 2009,
+                'mark_id'    => 2,
+                'company_id' => 1,
+                'color'      => '#2f80bb',
+                'vin_number' => 'XUYTL744JF012515B',
+                'gov_number' => '',
+                'api_code'   => sha1(time() . env('APP_KEY') . 8),
+            ],
+            [
+                'name'       => 'test',
+                'year'       => 2009,
+                'mark_id'    => 1,
+                'company_id' => 1,
+                'color'      => '#2f80bb',
+                'vin_number' => 'XUYTL744JF012515B',
+                'gov_number' => '',
+                'api_code'   => sha1(time() . env('APP_KEY') . 9),
+            ],
+            [
+                'name'       => 'car',
+                'year'       => 1998,
+                'mark_id'    => 1,
+                'company_id' => 1,
+                'color'      => '#2f80bb',
+                'vin_number' => '',
+                'gov_number' => '',
+                'api_code'   => sha1(time() . env('APP_KEY') . 10),
+            ],
+            [
+                'name'       => 'car',
+                'year'       => 2012,
+                'mark_id'    => 25,
+                'company_id' => 1,
+                'color'      => '#2f80bb',
+                'vin_number' => '',
+                'gov_number' => '',
+                'api_code'   => sha1(time() . env('APP_KEY') . 11),
             ],
         ];
+
         DB::table('cars')->insert($cars);
 
-        $carsRoutes          = [
+        factory(Car::class, 1000)->create([
+            'company_id' => 1,
+        ]);
+
+        Company::updateCarsCounter(User::find(1)->company);
+
+        $carsRoutes            = [
             [
                 'name'       => 'Калининград - заправка',
                 'car_id'     => 1,
@@ -81,9 +180,15 @@ class DemoUserSeeder extends Seeder
                 'car_id'     => 2,
                 'start_time' => Carbon::create(2020, 4, 7, 1, 43, 15),
                 'end_time'   => Carbon::create(2020, 4, 10, 16, 4, 10),
+            ],
+            [
+                'name'       => 'Reykjavik',
+                'car_id'     => 2,
+                'start_time' => now()->subMinutes(10),
+                'end_time'   => now(),
             ]
         ];
-        $carsPointsRoute1    = [
+        $carPointsRoute1       = [
             [
                 'car_id'     => 1,
                 'route_id'   => 1,
@@ -337,7 +442,7 @@ class DemoUserSeeder extends Seeder
                 'created_at' => Carbon::create(2020, 3, 9, 16, 32, 15)
             ],
         ];
-        $carsPointsRoute1end = [
+        $carPointsRoute1end    = [
             [
                 'car_id'     => 1,
                 'route_id'   => 1,
@@ -381,7 +486,7 @@ class DemoUserSeeder extends Seeder
                 'created_at' => Carbon::create(2020, 3, 9, 16, 35, 10)
             ],
         ];
-        $carsPointsRoute2    = [
+        $carPointsRoute2       = [
             [
                 'car_id'     => 1,
                 'route_id'   => 2,
@@ -474,7 +579,7 @@ class DemoUserSeeder extends Seeder
                 'created_at' => Carbon::create(2020, 4, 7, 15, 53, 10),
             ],
         ];
-        $carsPointsRoute2end = [
+        $carPointsRoute2end    = [
             [
                 'car_id'     => 1,
                 'route_id'   => 2,
@@ -679,7 +784,7 @@ class DemoUserSeeder extends Seeder
                 'created_at' => Carbon::create(2020, 4, 8, 16, 20, 20),
             ],
         ];
-        $cars2PointsRoute    = [
+        $carSecondPointsRoute  = [
             [
                 'car_id'     => 2,
                 'route_id'   => 3,
@@ -849,14 +954,123 @@ class DemoUserSeeder extends Seeder
                 'created_at' => Carbon::create(2020, 4, 7, 16, 10, 54),
             ],
         ];
+        $carSecondPointsRoute2 = [
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 63.990348,
+                'longitude'  => -22.578255,
+                'created_at' => now()->subMinutes(18)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 63.993123,
+                'longitude'  => -22.582289,
+                'created_at' => now()->subMinutes(17)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 63.995149,
+                'longitude'  => -22.585484,
+                'created_at' => now()->subMinutes(16)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 63.997164,
+                'longitude'  => -22.589354,
+                'created_at' => now()->subMinutes(15)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.000209,
+                'longitude'  => -22.595405,
+                'created_at' => now()->subMinutes(14)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.001519,
+                'longitude'  => -22.599440,
+                'created_at' => now()->subMinutes(13)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.002702,
+                'longitude'  => -22.602115,
+                'created_at' => now()->subMinutes(12)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.002926,
+                'longitude'  => -22.602033,
+                'created_at' => now()->subMinutes(11)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.002926,
+                'longitude'  => -22.602033,
+                'created_at' => now()->subMinutes(10)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.003036,
+                'longitude'  => -22.602546,
+                'created_at' => now()->subMinutes(9)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.002844,
+                'longitude'  => -22.602865,
+                'created_at' => now()->subMinutes(8)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.002714,
+                'longitude'  => -22.605127,
+                'created_at' => now()->subMinutes(7)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.002811,
+                'longitude'  => -22.608130,
+                'created_at' => now()->subMinutes(6)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.002714,
+                'longitude'  => -22.610853,
+                'created_at' => now()->subMinutes(5)
+            ],
+            [
+                'car_id'     => 2,
+                'route_id'   => 4,
+                'latitude'   => 64.000930,
+                'longitude'  => -22.625468,
+                'created_at' => now()->subMinutes(4)
+            ],
+        ];
 
 
         DB::table('cars_routes')->insert($carsRoutes);
-        DB::table('cars_points')->insert($carsPointsRoute2);    // 1car
-        DB::table('cars_points')->insert($carsPointsRoute1);    // 1 car
-        DB::table('cars_points')->insert($cars2PointsRoute);    // 2 car
-        DB::table('cars_points')->insert($carsPointsRoute2end); // 1car
-        DB::table('cars_points')->insert($carsPointsRoute1end); // 1car
+
+        DB::table('cars_points')->insert($carPointsRoute2);         // 1 car
+        DB::table('cars_points')->insert($carPointsRoute1);         // 1 car
+        DB::table('cars_points')->insert($carSecondPointsRoute);    // 2 car
+        DB::table('cars_points')->insert($carPointsRoute2end);      // 1 car
+        DB::table('cars_points')->insert($carPointsRoute1end);      // 1 car
+        DB::table('cars_points')->insert($carSecondPointsRoute2);   // 2 car
 
 
         foreach ($carsRoutes as $index => $value) {
@@ -870,14 +1084,20 @@ class DemoUserSeeder extends Seeder
                     if ($startPoint->route_id === $endPoint->route_id) {
                         $interval = ($endPoint->created_at)->diffAsCarbonInterval($startPoint->created_at);
                         if ($startPoint->car_id === $endPoint->car_id) {
-                            CarRouteSection::create([
+                            $section = CarRouteSection::create([
                                 'route_id'       => $endPoint->route_id,
-                                'start_point_id' => $startPoint->id,
-                                'end_point_id'   => $endPoint->id,
                                 'moving_time_ru' => $interval->locale('ru')->forHumans(),
                                 'moving_time_en' => $interval->locale('en')->forHumans(),
                             ]);
                         }
+                        PointsSection::create([
+                            'section_id' => $section->id,
+                            'point_id'   => $startPoint->id
+                        ]);
+                        PointsSection::create([
+                            'section_id' => $section->id,
+                            'point_id'   => $endPoint->id
+                        ]);
                     }
                 }
             }

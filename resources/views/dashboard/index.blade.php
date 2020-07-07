@@ -9,15 +9,17 @@
                 s
             </h2>
             <button class="btn btn-light dropdown-toggle" type="button"
-                    id="mapDropDownMenuButton">{{ __('dashboard.map.routes') }}
+                    id="mapDropDownMenuButton">{{ __('dashboard.cars.cars') }}
             </button>
             <ul class="list-unstyled map-menu" dropdown="hide">
                 @foreach($cars as $car)
                     <li class="map-menu-item">
-                        <a class="map-menu-item__car_link"
+                        <a class="map-menu-item__car_link py-3 px-3 bg-light card-link text-dark d-block position-relative"
                            data-toggle="collapse"
                            href="#car-{{ $car->id }}"
                            aria-expanded="false">{{ $car->name_full }} {{ $car->gov_number }}
+                            <img class="position-absolute" src="{{ $car->brand->image }}" width="100px"
+                                 style="right: 0; top: 0" alt="brand-logo">
                         </a>
                         <map-car style="display: none"
                                  data-car-id="{{ $car->id }}"
@@ -25,18 +27,19 @@
                                  data-car-point-image="{{ asset('images/map/car-point.png') }}"
                                  data-car-gov-number="{{ $car->gov_number }}"
                                  data-car-gov-number-translate="{{ __('dashboard.cars.table.gov_number') }}"
+
                                  data-car-location-latitude="{{ $car->location->latitude }}"
                                  data-car-location-longitude="{{ $car->location->longitude }}">
                         </map-car>
 
                         <div class="collapse bg-light rounded" id="car-{{ $car->id }}">
                             <ol class="p-0">
-                                <div class="d-flex justify-content-between">
-                                    <div class="bg-primary w-100 py-2 px-1 text-center"
+                                <div class="d-flex justify-content-between bg-primary text-center rounded-0">
+                                    <div class="w-100 py-2 px-1"
                                          style="border-top-left-radius: 5px">
                                         {{ __('dashboard.map.time on the way') }}:
                                     </div>
-                                    <div class="bg-primary w-100 py-2 px-1 text-center"
+                                    <div class="w-100 py-2 px-1"
                                          style="border-top-right-radius: 5px">
                                         {{ $car->moving_time }}
                                     </div>
@@ -54,25 +57,25 @@
                                 </div>
                                 @foreach ($car->routes->reverse() as $route)
                                     <li class="map-menu-item">
-                                        <a class="map-menu-item__route_link"
+                                        <a class="map-menu-item__route_link mb-2"
                                            data-toggle="collapse"
                                            href="#route-{{ $route->id }}"
                                            aria-expanded="false">
                                             {{ $route->name }}
-                                            <span class="badge bg-gradient-primary"
+                                            <span class="badge bg-gradient-primary text-white"
                                                   name="map_route_length-{{ $route->id }}">
-                                                {{ __('dashboard.map.km') }}
+                                                    {{ __('dashboard.map.km') }}
                                             </span>
                                             @if($car->isCurrentRoute($route->id))
-                                                <span class="badge bg-gradient-success">
-                                                {{ __('dashboard.map.current route') }}
-                                            </span>
+                                                <span class="badge bg-gradient-success text-white">
+                                                    {{ __('dashboard.map.current route') }}
+                                                </span>
                                             @endif
                                         </a>
                                         <div class="collapse" id="route-{{ $route->id }}">
                                             <div class="card card-body bg-dark border-dark">
                                                 <p class="text-center">{{ $route->moving_time}}</p>
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-6">
                                                         <button class="btn btn-outline-light w-100" type="button"
                                                                 name="map-set-center-button"
@@ -149,18 +152,6 @@
 
     .map-menu .map-menu-item {
         padding: 5px;
-    }
-
-    .map-menu .map-menu-item__car_link {
-        color: white;
-    }
-
-    .map-menu .map-menu-item__car_link:hover {
-        color: white;
-    }
-
-    .map-menu .map-menu-item__route_link:hover {
-        color: #000000;
     }
 </style>
 
@@ -266,7 +257,7 @@
                     }))
 
 
-                    if (distance.valueName === ('m') || distance.valueName === 'м') {
+                    if (distance.valueName === 'm' || distance.valueName === 'м') {
                         distance.length = distance.length / 1000
                     }
 
@@ -296,7 +287,7 @@
 
                 setCenter(coords)
             })
-
         }
     </script>
 @endsection
+

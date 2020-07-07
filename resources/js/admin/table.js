@@ -18,28 +18,59 @@ function callConfirmModal(button) {
     });
 }
 
-const checkboxes = document.querySelectorAll('#dataTable input[type=checkbox]');
+var tbodyQuerySelector = 'table[id=dataTable] tbody';
 
-function checkAll() {
-    checkboxes.forEach(input => input.checked = true)
-    // TODO fix button
-    allowButton(true)
-}
+var tbody = document.querySelector(tbodyQuerySelector),
+    tbodyElements = document.querySelectorAll(tbodyQuerySelector + ' tr'),
+    checkedTableElements = [];
 
-function unCheckAll() {
-    checkboxes.forEach(input => input.checked = false)
-    // TODO fix button
-    allowButton(false)
-}
+tbody.onclick = function (event) {
+    let target = event.target.closest('tr'),
+        id = target.getAttribute('data-car-id')
 
-checkboxes.forEach(input => input.addEventListener('change', function (event) {
-    checkedCheckboxes = document.querySelectorAll('#dataTable input:checked')
-    if (checkedCheckboxes.length === 0) {
-        allowButton(false)
-    } else {
-        allowButton(true)
+    if (target) {
+        checkChecked(target)
     }
-}))
+
+    highlight(target)
+}
+
+function highlight(target, toggle = true, method = false) {
+    let classes = ['bg-gradient-primary', 'text-white']
+
+    if (toggle) {
+        classes.forEach(value => {
+            target.classList.toggle(value)
+        })
+    } else {
+        if (method) {
+            classes.forEach(value => {
+                target.classList.add(value)
+            })
+        } else {
+            classes.forEach(value => {
+                target.classList.remove(value)
+            })
+        }
+    }
+}
+
+function checkChecked(element, check = true) {
+    if (check) {
+        if (checkedTableElements.includes(element)) {
+            let index = checkedTableElements.indexOf(element)
+
+            checkedTableElements.splice(index, 1)
+        } else {
+            checkedTableElements.push(element)
+            allowButton(true)
+        }
+    }
+
+    if (checkedTableElements.length === 0) {
+        allowButton(false)
+    }
+}
 
 function allowButton(action) {
     deleteBtn = document.getElementById('__delete-many-btn');
@@ -52,3 +83,18 @@ function allowButton(action) {
     }
 }
 
+function checkAll() {
+    checkedTableElements = []
+    tbodyElements.forEach(value => {
+        checkChecked(value)
+        highlight(value, false, true)
+    })
+}
+
+function unCheckAll() {
+    checkedTableElements = []
+    tbodyElements.forEach(value => {
+        checkChecked(value, false)
+        highlight(value, false, false)
+    })
+}

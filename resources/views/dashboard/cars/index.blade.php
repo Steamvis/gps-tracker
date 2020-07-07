@@ -11,23 +11,13 @@
             </div>
             <div
                 class="bg-danger text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
-                0
+                {{ $carsDisconnectedCounter }}
                 <span>{{ __('dashboard.cars.disconnected') }}</span>
             </div>
             <div
                 class="bg-success text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
-                0
+                {{ $carsConnectedCounter }}
                 <span>{{ __('dashboard.cars.connected') }}</span>
-            </div>
-            <div
-                class="bg-primary text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
-                0
-                <span>{{ __('dashboard.cars.moving') }}</span>
-            </div>
-            <div
-                class="bg-secondary text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
-                0
-                <span>{{ __('dashboard.cars.parking') }}</span>
             </div>
         </div>
     </div>
@@ -87,10 +77,8 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
-                        <th style="width: 1%;"></th>
                         <th>{{ __('dashboard.cars.table.name') }}</th>
                         <th>{{ __('dashboard.cars.table.brand_name') }}</th>
-                        <th>{{ __('dashboard.cars.table.location') }}</th>
                         <th>{{ __('dashboard.cars.table.api_key') }}</th>
                         <th>{{ __('dashboard.cars.table.gov_number') }}</th>
                         <th>{{ __('dashboard.cars.table.vin_number') }}</th>
@@ -99,70 +87,14 @@
                         <th>{{ __('dashboard.general.forms.actions') }}</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    @foreach($cars as $car)
-                        <tr>
-                            <td>
-                                <input class="__action" form="delete-many-objects-form" type="checkbox"
-                                       name="action[]" value="{{ $car->id }}">
-                            </td>
-                            <td>{{ $car->name }}</td>
-                            <td>{{ $car->brand->name }}</td>
-                            <td>location</td>
-                            <td>{{ $car->api_code }}</td>
-                            <td>{{ $car->gov_number }}</td>
-                            <td>{{ $car->vin_number }}</td>
-                            <td>{{ $car->year }}</td>
-                            <td style="height: 1%; background-color: {{ $car->color }}"></td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                            id="dropdownItemActions" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                        {{ __('dashboard.general.forms.actions') }}
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownItemActions">
-                                        <form method="POST"
-                                              action="{{ route('cars.destroy', [
-                                                    'locale' => app()->getLocale(),
-                                                    'car' => $car,
-                                                ]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button"
-                                                    name="id"
-                                                    onclick="callConfirmModal(this)"
-                                                    data-title="{{ __('dashboard.general.forms.confirm') }}"
-                                                    data-cancel="{{ __('dashboard.general.forms.cancel') }}"
-                                                    data-confirm="{{ __('dashboard.general.forms.ok') }}"
-                                                    class="dropdown-item">
-                                                {{ __('dashboard.cars.CRUD.delete') }}
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
+                    @include('dashboard.cars.index_table', ['cars' => $cars])
                 </table>
             </div>
         </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-between">
-                {{ $cars->links('dashboard.pagination') }}
-            </div>
-        </div>
+        @yield('pagination')
     </div>
-
-
 @endsection
 
 @section('scripts')
     <script src="{{ mix('admin/js/app_common.js') }}"></script>
-    <script src="{{ mix('admin/js/sweetalert.js') }}"></script>
-    @include('sweetalert::alert', ['cdn' => ''])
 @endsection
-
-
-

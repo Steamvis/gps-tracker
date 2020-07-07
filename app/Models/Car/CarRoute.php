@@ -18,6 +18,11 @@ class CarRoute extends Model
         'end_time'
     ];
 
+    public function getRouteNameAttribute(): string
+    {
+        // TODO
+    }
+
     public function getMovingTimeAttribute(): string
     {
         $format    = 'Y-m-d H:i';
@@ -27,20 +32,21 @@ class CarRoute extends Model
         return "{$startTime} - {$endTime}";
     }
 
-
     public function getStartAttribute(): object
     {
+        $point = $this->sections->first()->points->first();
         return (object)[
-            'latitude'  => $this->sections->first()->start_point->latitude,
-            'longitude' => $this->sections->first()->start_point->longitude
+            'latitude'  => $point->latitude,
+            'longitude' => $point->longitude
         ];
     }
 
     public function getEndAttribute(): object
     {
+        $point = $this->sections->last()->points->last();
         return (object)[
-            'latitude'  => $this->sections->last()->end_point->latitude,
-            'longitude' => $this->sections->last()->end_point->longitude
+            'latitude'  => $point->latitude,
+            'longitude' => $point->longitude
         ];
     }
 

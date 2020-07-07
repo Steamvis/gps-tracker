@@ -19,6 +19,9 @@ class Company
             return \Redirect::route('company_register', app()->getLocale());
         }
 
+        \View::share(['company' => auth()->user()->company]);
+
+
         return $next($request);
     }
 }

@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -61,7 +62,10 @@
         </div>
     </div>
 </div>
+
 <script src="{{ mix('admin/js/app.js') }}"></script>
+<script src="{{ mix('admin/js/sweetalert.js') }}"></script>
+@include('sweetalert::alert', ['cdn' => ''])
 @yield('scripts')
 
 </body>

@@ -13,6 +13,7 @@ class CarPoint extends Model
     public $fillable = [
         'car_id',
         'route_id',
+        'section_id',
         'latitude',
         'longitude',
     ];
@@ -25,5 +26,10 @@ class CarPoint extends Model
     public function route(): HasOne
     {
         return $this->hasOne(CarRoute::class, 'id', 'route_id');
+    }
+
+    public function section(): BelongsTo
+    {
+        return $this->belongsTo(CarRouteSection::class);
     }
 }

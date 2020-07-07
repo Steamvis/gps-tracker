@@ -15,17 +15,17 @@ class AddCarsRouteSectionsForeignKeys extends Migration
                 ->on('cars_routes')
                 ->onDelete('cascade');
 
-            $table
-                ->foreign('start_point_id')
-                ->references('id')
-                ->on('cars_points')
-                ->onDelete('cascade');
+//            $table
+//                ->foreign('id')
+//                ->references('section_id')
+//                ->on('cars_points')
+//                ->onDelete('cascade');
 
-            $table
-                ->foreign('end_point_id')
-                ->references('id')
-                ->on('cars_points')
-                ->onDelete('cascade');
+//            $table
+//                ->foreign('end_point_id')
+//                ->references('id')
+//                ->on('cars_points')
+//                ->onDelete('cascade');
         });
     }
 

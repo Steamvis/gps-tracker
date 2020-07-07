@@ -13,11 +13,36 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class CarsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cars = Car::with('brand')->whereCompanyId(auth()->user()->company_id)->paginate(10);
+        $cars = Car::with('brand', 'points')->whereCompanyId(auth()->user()->company_id);
 
-        return view('dashboard.cars.index', compact('cars'));
+        if ($request->ajax()) {
+            $cars = $cars->select([
+                'id',
+                'name',
+                'mark_id',
+                'api_code',
+                'gov_number',
+                'vin_number',
+                'year',
+                'color'
+            ]);
+        }
+
+        $cars = $cars->paginate(10);
+
+        $carsConnectedCounter = $cars->filter(function ($car) {
+            return $car->isConnectedMap;
+        })->count();
+
+        $carsDisconnectedCounter = $cars->filter(function ($car) {
+            return !$car->isConnectedMap;
+        })->count();
+
+//        auth()->user()->company->updateConnecterCarsCounter();
+
+        return view('dashboard.cars.index', compact('cars', 'carsConnectedCounter', 'carsDisconnectedCounter'));
     }
 
     public function create()

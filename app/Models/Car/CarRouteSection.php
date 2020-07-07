@@ -27,18 +27,36 @@ class CarRouteSection extends Model
         return $this->attributes[$movingTime];
     }
 
+    public function getStartPointAttribute(): object
+    {
+        $point = $this->points->first();
+        return (object)[
+            'latitude'  => $point->latitude,
+            'longitude' => $point->longitude
+        ];
+    }
+
+    public function getEndPointAttribute(): object
+    {
+        $point = $this->points->last();
+        return (object)[
+            'latitude'  => $point->latitude,
+            'longitude' => $point->longitude
+        ];
+    }
+
+    public function points()
+    {
+        return $this->belongsToMany(
+            CarPoint::class,
+            'points_section',
+            'section_id',
+            'point_id',
+        );
+    }
+
     public function route(): HasOne
     {
         return $this->hasOne(CarRoute::class, 'id', 'route_id');
-    }
-
-    public function start_point(): HasOne
-    {
-        return $this->hasOne(CarPoint::class, 'id', 'start_point_id');
-    }
-
-    public function end_point(): HasOne
-    {
-        return $this->hasOne(CarPoint::class, 'id', 'end_point_id');
     }
 }

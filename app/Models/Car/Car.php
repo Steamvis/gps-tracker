@@ -2,10 +2,12 @@
 
 namespace App\Models\Car;
 
+use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class Car extends Model
 {
@@ -49,7 +51,8 @@ class Car extends Model
 
     public function getApiCodeAttribute(): string
     {
-        return "{$this->attributes['api_code']}_{$this->attributes['id']}";
+        $apiCode = Str::limit($this->attributes['api_code'], 10, '');
+        return "{$apiCode}_{$this->attributes['id']}";
     }
 
     public function getBrandNameAttribute(): string
@@ -70,6 +73,17 @@ class Car extends Model
             'latitude'  => $point->latitude,
             'longitude' => $point->longitude
         ];
+    }
+
+    public function getIsConnectedMapAttribute()
+    {
+        $points = $this->points;
+
+        if ($points->isEmpty()) {
+            return false;
+        }
+
+        return $points->last()->created_at->diffInMinutes() < 5;
     }
 
     public function company(): HasOne

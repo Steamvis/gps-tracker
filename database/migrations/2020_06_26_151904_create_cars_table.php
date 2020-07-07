@@ -16,16 +16,12 @@ class CreateCarsTable extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->string('color', 7)->nullable();
             $table->string('name');
-            $table->string('api_code',10)->unique();
+            $table->string('api_code',40)->unique();
             $table->char('year', 4)->nullable();
             $table->string('vin_number')->nullable();
             $table->string('gov_number')->nullable();
             $table->string('description')->nullable();
         });
-
-//        Schema::table('cars', function (Blueprint $table) {
-//            $table->index('company_id', 'cars_company_id');
-//        });
     }
 
     public function down()

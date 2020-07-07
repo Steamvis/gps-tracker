@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Notifications\LocaleResetPassword;
-use App\Notifications\LocaleVerifyEmail;
+use App\Jobs\SendResetPasswordEmail;
+use App\Jobs\SendVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,11 +14,9 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
 
     const LEVEL_ADMIN           = 100;
-    const LEVEL_MODERATOR       = 90;
     const LEVEL_COMPANY_OWNER   = 50;
     const LEVEL_COMPANY_MANAGER = 10;
-    const LEVEL_COMPANY_DRIVER  = 0;
-    const LEVEL_UNVERIFIED  = 0;
+    const LEVEL_UNVERIFIED      = 0;
 
     /**
      * The attributes that are mass assignable.
@@ -65,7 +63,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new LocaleVerifyEmail());
+        SendVerifyEmail::dispatch($this)->delay(now()->addSeconds(3));
     }
 
     /**
@@ -75,6 +73,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new LocaleResetPassword($token));
+        SendResetPasswordEmail::dispatch($this, $token)->delay(now()->addSeconds(3));
     }
 }

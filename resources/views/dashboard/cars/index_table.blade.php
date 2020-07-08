@@ -1,6 +1,6 @@
 <tbody>
 @foreach($cars as $car)
-    <tr data-car-id="{{ $car->id }}">
+    <tr data-car-id="{{ $car->id }}" style="cursor: pointer">
         <td>{{ $car->name }}</td>
         <td>{{ $car->brand->name }}</td>
         <td>{{ $car->api_code }}</td>

@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(Car::class, function (Faker $faker) {
     return [
-        'mark_id'  => 2,
+        'mark_id'  => CarMark::all()->random()->id,
         //        'company_id' => Company::all()->random()->id,
         'color'    => $faker->hexColor,
         'name'     => $faker->name,

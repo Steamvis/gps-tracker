@@ -5,8 +5,8 @@ var tbody = document.querySelector(tbodyQuerySelector),
     checkedTableElements = [];
 
 tbody.onclick = function (event) {
-    let target = event.target.closest('tr'),
-        id = target.getAttribute('data-car-id')
+    let target = event.target.closest('tr')
+        // id = target.getAttribute('data-car-id')
 
     if (target) {
         checkChecked(target)
@@ -77,5 +77,37 @@ function unCheckAll() {
         checkChecked(value, false)
         highlight(value, false, false)
     })
+}
+
+function callConfirmModal(button) {
+    let form = button.parentNode,
+        title = button.getAttribute('data-title'),
+        confirm = button.getAttribute('data-confirm'),
+        cancel = button.getAttribute('data-cancel');
+    Swal.fire({
+        title: title,
+        icon: 'warning',
+        showCancelButton: true,
+        focusCancel: true,
+        confirmButtonColor: '#d33',
+        cancelButtonText: cancel,
+        confirmButtonText: confirm,
+    }).then(function (request) {
+        if (request.value) {
+            let actionValues = document.querySelector('input[name="action[]"]')
+            actionValues.value = getCarIDs()
+
+            form.submit()
+        }
+    });
+}
+
+function getCarIDs() {
+    let carIDs = [];
+    checkedTableElements.forEach(item => {
+        carIDs.push(item.getAttribute('data-car-id'))
+    })
+
+    return carIDs;
 }
 

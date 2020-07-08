@@ -9,7 +9,7 @@
             <button class="btn btn-light dropdown-toggle" type="button"
                     id="mapDropDownMenuButton">{{ __('dashboard.cars.cars') }}
             </button>
-            <ul class="list-unstyled map-menu" dropdown="hide">
+            <ul class="list-unstyled map-menu" dropdown="hide" data-units-km="{{ __('dashboard.map.km') }}">
                 @foreach($cars as $car)
                     <li class="map-menu-item">
                         <a class="map-menu-item__car_link py-3 px-3 bg-light card-link text-dark d-block position-relative"
@@ -64,7 +64,7 @@
                                             {{ $route->name }}
                                             <span class="badge bg-gradient-primary text-white"
                                                   name="map_route_length-{{ $route->id }}">
-                                                    {{ __('dashboard.map.km') }}
+
                                             </span>
                                             @if($car->isCurrentRoute($route->id))
                                                 <span class="badge bg-gradient-success text-white" data-route="current">
@@ -176,7 +176,8 @@
     </script>
     <script>
         let carMapMenuLink = document.querySelectorAll('a.map-menu-item__car_link'),
-            carMapMenuCollapses = document.querySelectorAll('li.map-menu-item div[data-target=map-menu-collapse-car-block]')
+            carMapMenuCollapses = document.querySelectorAll('li.map-menu-item div[data-target=map-menu-collapse-car-block]'),
+            unitsIsmKM = document.querySelector('ul.map-menu').getAttribute('data-units-km')
 
         ymaps.ready(init);
 
@@ -193,203 +194,221 @@
                 routesMAP = new ymaps.GeoObjectCollection(null)
 
             carsHTML.forEach(function (carHTML) {
-                let ID = carHTML.getAttribute('data-car-id'),
-                    name = carHTML.getAttribute('data-car-name'),
-                    govNumber = carHTML.getAttribute('data-car-gov-number'),
-                    translate = carHTML.getAttribute('data-car-gov-number-translate'),
-                    image = carHTML.getAttribute('data-car-point-image'),
-                    location = {
+                // creating cars collection
+                carsMAP.add(factoryCarPoints({
+                    ID: carHTML.getAttribute('data-car-id'),
+                    name: carHTML.getAttribute('data-car-name'),
+                    govNumber: carHTML.getAttribute('data-car-gov-number'),
+                    govNumberWord: carHTML.getAttribute('data-car-gov-number-translate'),
+                    image: carHTML.getAttribute('data-car-point-image'),
+                    location: {
                         latitude: carHTML.getAttribute('data-car-location-latitude'),
                         longitude: carHTML.getAttribute('data-car-location-longitude')
-                    };
-
-                carsMAP.add(new ymaps.Placemark(
-                    [location.latitude, location.longitude],
-                    {
-                        balloonContent: '<strong>' + name + '</strong><br>' + translate + ': ' + govNumber + ''
-                    },
-                    {
-                        iconLayout: 'default#image',
-                        iconImageSize: [50, 50],
-                        iconImageOffset: [-10, -30],
-                        iconImageHref: image,
                     }
-                ))
-            });
+                }));
 
+                routesHTML.forEach(function (routeHTML) {
+                    let routeID = routeHTML.getAttribute('data-route-id'),
+                        routeLength = 0,
+                        sectionsHTML = routeHTML.getElementsByTagName('section'),
+                        isCurrentRoute = routeHTML.parentNode.querySelector('span[data-route=current]') !== null
 
-            routesHTML.forEach(function (routeHTML) {
-                let routeID = routeHTML.getAttribute('data-route-id'),
-                    routeLength = 0,
-                    sectionsHTML = routeHTML.getElementsByTagName('section'),
-                    isCurrentRoute = routeHTML.parentNode.querySelector('span[data-route=current]') !== null
+                    for (sectionHTML of sectionsHTML) {
+                        let sectionID = sectionHTML.getAttribute('data-id'),
+                            movingTime = sectionHTML.getAttribute('data-moving-time'),
+                            startPoint = [
+                                sectionHTML.getAttribute('data-start-point-latitude'),
+                                sectionHTML.getAttribute('data-start-point-longitude')
+                            ],
+                            endPoint = [
+                                sectionHTML.getAttribute('data-end-point-latitude'),
+                                sectionHTML.getAttribute('data-end-point-longitude')
+                            ];
 
-                for (sectionHTML of sectionsHTML) {
-                    let sectionID = sectionHTML.getAttribute('data-id'),
-                        movingTime = sectionHTML.getAttribute('data-moving-time'),
-                        startPoint = [
-                            sectionHTML.getAttribute('data-start-point-latitude'),
-                            sectionHTML.getAttribute('data-start-point-longitude')
-                        ],
-                        endPoint = [
-                            sectionHTML.getAttribute('data-end-point-latitude'),
-                            sectionHTML.getAttribute('data-end-point-longitude')
-                        ];
+                        let distance = ymaps.formatter.distance(ymaps.coordSystem.geo.getDistance(startPoint, endPoint)),
+                            length = '(^.*)&#',
+                            valueName = ';(.*$)';
 
-                    let distance = ymaps.formatter.distance(ymaps.coordSystem.geo.getDistance(startPoint, endPoint)),
-                        length = '(^.*)&#',
-                        valueName = ';(.*$)';
+                        distance = {
+                            length: distance.match(length)[1],
+                            valueName: distance.match(valueName)[1]
+                        }
 
-                    distance = {
-                        length: distance.match(length)[1],
-                        valueName: distance.match(valueName)[1]
+                        if (distance.valueName === 'm' || distance.valueName === 'м') {
+                            distance.length = distance.length / 1000
+                        }
+
+                        // display only the current route
+                        if (isCurrentRoute) {
+                            routesMAP.add(factoryRouteSections({
+                                startPoint: startPoint,
+                                endPoint: endPoint,
+                                movingTime: movingTime,
+                                distance: {
+                                    length: distance.length,
+                                    valueName: distance.valueName
+                                }
+                            }))
+                        }
+
+                        routeLength = Number(routeLength) + Number(distance.length);
                     }
 
-                    if (distance.valueName === 'm' || distance.valueName === 'м') {
-                        distance.length = distance.length / 1000
-                    }
-
-                    routeLength = Number(routeLength) + Number(distance.length);
-
-                    // display only the current route
-                    if (isCurrentRoute) {
-                        routesMAP.add(getPolylinesCollection({
-                            startPoint: startPoint,
-                            endPoint: endPoint,
-                            movingTime: movingTime,
-                            distance: {
-                                length: distance.length,
-                                valueName: distance.valueName
-                            }
-                        }))
-                    }
-                }
-
-                let routeLengthElement = document.getElementsByName('map_route_length-' + routeID)
-                routeLengthElement[0].prepend(routeLength.toFixed(1))
-            })
-
-            myMap.geoObjects
-                .add(routesMAP)
-                .add(carsMAP)
-
-            ////////////////////////////////////////////////////////////////////////////////
-            // functions
-            ////////////////////////////////////////////////////////////////////////////////
-
-            function getPolylinesCollection(section) {
-                return new ymaps.Polyline([
-                    section.startPoint,
-                    section.endPoint,
-                ], {
-                    balloonContentHeader: section.movingTime,
-                    balloonContent: section.distance.length + ' ' + section.distance.valueName
-                }, {
-                    balloonCloseButton: false,
-                    strokeColor: "#2c56c1",
-                    strokeWidth: 6,
-                    strokeOpacity: .6
+                    let routeLengthElement = document.getElementsByName('map_route_length-' + routeID)
+                    routeLengthElement[0].textContent = routeLength.toFixed(1) + ' ' + unitsIsmKM
                 })
-            }
 
-            function setCenter(coords) {
-                myMap.setCenter(coords, 17);
-            }
 
-            let mapSetCenterButtons = jQuery('[name=map-set-center-button]');
+                myMap.geoObjects
+                    .add(routesMAP)
+                    .add(carsMAP)
 
-            mapSetCenterButtons.on('click', function (event) {
-                let coords = [
-                    event.target.getAttribute('data-latitude'),
-                    event.target.getAttribute('data-longitude')
-                ]
+                ////////////////////////////////////////////////////////////////////////////////
+                // functions
+                ////////////////////////////////////////////////////////////////////////////////
 
-                setCenter(coords)
-            })
-
-            carMapMenuLink.forEach(link => {
-                let parent = link.parentNode,
-                    routeMAP = new ymaps.GeoObjectCollection(null)
-
-                // click on car link
-                link.onclick = function (event) {
-                    let carInfo = parent.querySelector('map-car'),
-                        car = {
-                            name: carInfo.getAttribute('data-car-name'),
-                            id: carInfo.getAttribute('data-car-id'),
-                            number: carInfo.getAttribute('data-car-gov-number')
+                function factoryCarPoints(car) {
+                    return new ymaps.Placemark(
+                        [car.location.latitude, car.location.longitude],
+                        {
+                            balloonContent: '<strong>' + car.name + '</strong><br>' + car.govNumberWord + ': ' + car.govNumber + ''
                         },
-                        routes = parent.querySelectorAll('a.map-menu-item__route_link'),
-                        routeLength = 0
-
-                    routes.forEach(routeLink => {
-                        // click on route link
-                        routeLink.onclick = function (event) {
-                            // myMap.geoObjects.removeAll()
-                            console.log('click on route')
-
-                            let link = event.target,
-                                routeID = link.getAttribute('data-route-id'),
-                                route = parent.querySelector('map-sections[data-route-id="' + routeID + '"]'),
-                                routeSections = route.querySelectorAll('section');
-
-                            routeSections.forEach(section => {
-                                let movingTime = section.getAttribute('data-moving-time'),
-                                    startPoint = [
-                                        section.getAttribute('data-start-point-latitude'),
-                                        section.getAttribute('data-start-point-longitude')
-                                    ],
-                                    endPoint = [
-                                        section.getAttribute('data-end-point-latitude'),
-                                        section.getAttribute('data-end-point-longitude')
-                                    ],
-                                    distance = ymaps.formatter.distance(ymaps.coordSystem.geo.getDistance(startPoint, endPoint)),
-                                    length = '(^.*)&#',
-                                    valueName = ';(.*$)';
-
-                                distance = {
-                                    length: distance.match(length)[1],
-                                    valueName: distance.match(valueName)[1]
-                                }
-
-                                if (distance.valueName === 'm' || distance.valueName === 'м') {
-                                    distance.length = distance.length / 1000
-                                }
-
-                                routeLength = Number(routeLength) + Number(distance.length);
-
-                                routeMAP.add(getPolylinesCollection({
-                                    startPoint: startPoint,
-                                    endPoint: endPoint,
-                                    movingTime: movingTime,
-                                    distance: {
-                                        length: distance.length,
-                                        valueName: distance.valueName
-                                    }
-                                }))
-                            })
+                        {
+                            iconLayout: 'default#image',
+                            iconImageSize: [50, 50],
+                            iconImageOffset: [-10, -30],
+                            iconImageHref: car.image,
                         }
-                    })
+                    )
+                }
 
-                    myMap.geoObjects
-                        .add(routeMAP)
-
-                    function setCarNameOnMap() {
-                        document.getElementById('__car_name').textContent = car.name + ' ' + car.number
-                    }
-
-                    setCarNameOnMap()
-
-                    carMapMenuCollapses.forEach(collapseBlock => {
-                        let currentCollapseBlock = parent.querySelector('div[data-target=map-menu-collapse-car-block]')
-
-                        if (collapseBlock !== currentCollapseBlock) {
-                            collapseBlock.classList.remove('show')
-                        }
+                function factoryRouteSections(section) {
+                    return new ymaps.Polyline([
+                        section.startPoint,
+                        section.endPoint,
+                    ], {
+                        balloonContentHeader: section.movingTime,
+                        balloonContent: section.distance.length + ' ' + section.distance.valueName
+                    }, {
+                        balloonCloseButton: false,
+                        strokeColor: "#2c56c1",
+                        strokeWidth: 6,
+                        strokeOpacity: .6
                     })
                 }
-            })
 
+                function setCenter(coords) {
+                    myMap.setCenter(coords, 17);
+                }
+
+                let mapSetCenterButtons = jQuery('[name=map-set-center-button]');
+
+                mapSetCenterButtons.on('click', function (event) {
+                    let coords = [
+                        event.target.getAttribute('data-latitude'),
+                        event.target.getAttribute('data-longitude')
+                    ]
+
+                    setCenter(coords)
+                })
+
+                carMapMenuLink.forEach(link => {
+                    let parent = link.parentNode,
+                        routeMAP = new ymaps.GeoObjectCollection(null),
+                        carMAP = new ymaps.GeoObjectCollection(null)
+
+                    // click on car link
+                    link.onclick = function (event) {
+                        console.log('click on car')
+
+                        let carInfo = parent.querySelector('map-car'),
+                            car = {
+                                name: carInfo.getAttribute('data-car-name'),
+                                id: carInfo.getAttribute('data-car-id'),
+                                govNumber: carInfo.getAttribute('data-car-gov-number'),
+                                govNumberWord: carInfo.getAttribute('data-car-gov-number-translate'),
+                                image: carInfo.getAttribute('data-car-point-image'),
+                                location: {
+                                    latitude: carInfo.getAttribute('data-car-location-latitude'),
+                                    longitude: carInfo.getAttribute('data-car-location-longitude')
+                                }
+                            },
+                            routes = parent.querySelectorAll('a.map-menu-item__route_link')
+
+                        // creating car location point
+                        carMAP.add(factoryCarPoints(car));
+                        setCenter([car.location.latitude, car.location.longitude])
+
+                        routes.forEach(routeLink => {
+
+                            // click on route link
+                            routeLink.onclick = function (event) {
+                                routeMAP.removeAll()
+                                console.log('click on route')
+
+                                let link = event.target,
+                                    routeID = link.getAttribute('data-route-id'),
+                                    route = parent.querySelector('map-sections[data-route-id="' + routeID + '"]'),
+                                    routeSections = route.querySelectorAll('section');
+
+                                routeSections.forEach(section => {
+                                    let movingTime = section.getAttribute('data-moving-time'),
+                                        startPoint = [
+                                            section.getAttribute('data-start-point-latitude'),
+                                            section.getAttribute('data-start-point-longitude')
+                                        ],
+                                        endPoint = [
+                                            section.getAttribute('data-end-point-latitude'),
+                                            section.getAttribute('data-end-point-longitude')
+                                        ],
+                                        distance = ymaps.formatter.distance(ymaps.coordSystem.geo.getDistance(startPoint, endPoint)),
+                                        length = '(^.*)&#',
+                                        valueName = ';(.*$)';
+
+                                    distance = {
+                                        length: distance.match(length)[1],
+                                        valueName: distance.match(valueName)[1]
+                                    }
+
+                                    if (distance.valueName === 'm' || distance.valueName === 'м') {
+                                        distance.length = distance.length / 1000
+                                    }
+
+                                    routeMAP.add(factoryRouteSections({
+                                        startPoint: startPoint,
+                                        endPoint: endPoint,
+                                        movingTime: movingTime,
+                                        distance: {
+                                            length: distance.length,
+                                            valueName: distance.valueName
+                                        }
+                                    }))
+                                })
+                            }
+
+                            myMap.geoObjects.removeAll();
+                        })
+
+                        myMap.geoObjects
+                            .add(routeMAP)
+                            .add(carMAP)
+
+                        function setCarNameOnMap() {
+                            document.getElementById('__car_name').textContent = car.name + ' ' + car.number
+                        }
+
+                        setCarNameOnMap()
+
+                        carMapMenuCollapses.forEach(collapseBlock => {
+                            let currentCollapseBlock = parent.querySelector('div[data-target=map-menu-collapse-car-block]')
+
+                            if (collapseBlock !== currentCollapseBlock) {
+                                collapseBlock.classList.remove('show')
+                            }
+                        })
+                    }
+                })
+            })
         }
     </script>
 @endsection

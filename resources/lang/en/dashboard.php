@@ -46,7 +46,7 @@ return [
             'manager'     => 'Manager',
             'year'        => 'Year',
             'vin_number'  => 'VIN Code',
-            'gov_number'  => 'Car plate',
+            'gov_number'  => 'Car number',
             'location'    => 'Location',
             'description' => 'Description',
             'color'       => 'color',

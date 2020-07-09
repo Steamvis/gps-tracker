@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Validator;
 
-abstract class AbstractBaseService implements InterfaceBaseService
+abstract class AbstractBaseService
 {
     /**
      * Get the validation rules that apply to the service.
@@ -26,5 +26,10 @@ abstract class AbstractBaseService implements InterfaceBaseService
             ->validate();
 
         return true;
+    }
+
+    public function execute(array $data)
+    {
+        // TODO: Implement execute() method.
     }
 }

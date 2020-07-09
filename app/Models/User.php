@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Jobs\SendResetPasswordEmail;
-use App\Jobs\SendVerifyEmail;
+use App\Jobs\SendResetPasswordEmailJob;
+use App\Jobs\SendVerifyEmailJob;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -63,7 +63,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendEmailVerificationNotification()
     {
-        SendVerifyEmail::dispatch($this)->delay(now()->addSeconds(3));
+        SendVerifyEmailJob::dispatch($this)->delay(now()->addSeconds(3));
     }
 
     /**
@@ -73,6 +73,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendPasswordResetNotification($token)
     {
-        SendResetPasswordEmail::dispatch($this, $token)->delay(now()->addSeconds(3));
+        SendResetPasswordEmailJob::dispatch($this, $token)->delay(now()->addSeconds(3));
     }
 }

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Car extends Model
@@ -15,9 +16,7 @@ class Car extends Model
 
     protected $fillable = [
         'mark_id',
-        'driver_id',
         'color',
-        'manager_id',
         'company_id',
         'name',
         'year',
@@ -25,7 +24,10 @@ class Car extends Model
         'gov_number',
         'description',
         'api_code',
+        'image_path'
     ];
+
+    public $casts = ['year' => 'integer'];
 
     public function getMovingTimeAttribute()
     {
@@ -84,6 +86,13 @@ class Car extends Model
         }
 
         return $points->last()->created_at->diffInMinutes() < 5;
+    }
+
+    public function getImageAttribute(): string
+    {
+        return empty($this->attributes['image_path'])
+            ? asset('images/map/car-point.png')
+            : Storage::url($this->attributes['image_path']);
     }
 
     public function company(): HasOne

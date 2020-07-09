@@ -2,7 +2,7 @@
 
 namespace App\Services\Cars;
 
-use App\Models\Car;
+use App\Models\Car\Car;
 use App\Models\Company;
 use App\Services\AbstractBaseService;
 
@@ -24,7 +24,7 @@ class DestroyCar extends AbstractBaseService
         if ($car->company->owner_id === auth()->user()->id) {
             $car->delete();
 
-            Company::updateCarsCounter(auth()->user()->company_id);
+            Company::updateCarsCounter(auth()->user()->company);
 
             return true;
         } else {

@@ -24,7 +24,6 @@ class Company extends Model
         'owner_id' => 'integer'
     ];
 
-
     public static function updateCarsCounter(Company $company): void
     {
         $company->cars_counter = $company->cars->count();
@@ -35,7 +34,6 @@ class Company extends Model
     public function updateDisconnectedCarsCounter()
     {
         $this->cars->map(fn($car) => $car->is_connected_map);
-//        Cache::set('connected_cars_' . $company->id, $company->cars);
     }
 
     public function owner(): BelongsTo

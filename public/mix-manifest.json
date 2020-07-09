@@ -3,7 +3,9 @@
     "/admin/js/sweetalert.js": "/admin/js/sweetalert.js?id=4acb5eb3f478ac395fe0",
     "/js/app.js": "/js/app.js?id=a8bb9654557ef1253bae",
     "/landing/css/app.css": "/landing/css/app.css?id=387e510fd018642da3c3",
-    "/admin/css/sb-admin-2.css": "/admin/css/sb-admin-2.css?id=70efc9a1945e5d8f5d2d",
+    "/admin/css/sb-admin-2.css": "/admin/css/sb-admin-2.css?id=877359e9f2a0e4966440",
     "/admin/css/font-awesome.css": "/admin/css/font-awesome.css?id=3572193fe86d7a084f48",
-    "/admin/js/app_common.js": "/admin/js/app_common.js?id=6927442c59cbfa19ab55"
+    "/admin/js/app_common.js": "/admin/js/app_common.js?id=034892c8f1f5c7815c01",
+    "/admin/js/map.js": "/admin/js/map.js?id=fa883317dcc334830084",
+    "/admin/js/upload-file.js": "/admin/js/upload-file.js?id=8e6c430ad48b3af1af1f"
 }

@@ -1,6 +1,9 @@
 <tbody>
 @foreach($cars as $car)
     <tr data-car-id="{{ $car->id }}" style="cursor: pointer">
+        <td class="text-center">
+            <img src="{{ $car->image }}" alt="car-image" height="100px">
+        </td>
         <td>{{ $car->name }}</td>
         <td>{{ $car->brand->name }}</td>
         <td>{{ $car->api_code }}</td>
@@ -29,10 +32,24 @@
                                 data-title="{{ __('dashboard.general.forms.confirm') }}"
                                 data-cancel="{{ __('dashboard.general.forms.cancel') }}"
                                 data-confirm="{{ __('dashboard.general.forms.ok') }}"
-                                class="dropdown-item">
-                            {{ __('dashboard.cars.CRUD.delete') }}
+                                class="dropdown-item" style="font-size: 14px">
+                            {{ __('dashboard.general.CRUD.delete') }}
                         </button>
                     </form>
+                    <a class="dropdown-item" style="font-size: 14px"
+                       href="{{ route('cars.edit', [
+                            'locale' => app()->getLocale(),
+                            'car' => $car,
+                        ]) }}">
+                        {{ __('dashboard.general.CRUD.edit') }}
+                    </a>
+                    <a class="dropdown-item" style="font-size: 14px"
+                       href="{{ route('cars.show', [
+                            'locale' => app()->getLocale(),
+                            'car' => $car,
+                        ]) }}">
+                        {{ __('dashboard.general.CRUD.view') }}
+                    </a>
                 </div>
             </div>
         </td>

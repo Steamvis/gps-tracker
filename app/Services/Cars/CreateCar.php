@@ -2,11 +2,11 @@
 
 namespace App\Services\Cars;
 
+use App\Helpers\CodeGeneratorHelper;
 use App\Models\Car\Car;
 use App\Models\Company;
 use App\Services\AbstractBaseService;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
+use App\Services\FileSystem\UploadImage;
 
 class CreateCar extends AbstractBaseService
 {
@@ -18,19 +18,25 @@ class CreateCar extends AbstractBaseService
             'vin_number'  => 'nullable|string|min:11|max:17',
             'gov_number'  => 'nullable|string|min:3|max:30',
             'description' => 'nullable|string|min:10|max:500',
-            'year'        => 'nullable|date_format:Y',
+            'image_path'  => 'nullable|string',
             'mark_id'     => 'required|integer',
             'driver_id'   => 'nullable|integer',
             'manager_id'  => 'nullable|integer',
+            'year'        => 'nullable|date_format:Y',
         ];
     }
 
     public function execute(array $data): Car
     {
+        $user = auth()->user();
+
+        if (isset($data['image'])) {
+            $data['image_path'] = app(UploadImage::class)->execute([$data['image']]);
+        }
+
         $this->validate($data);
 
-        $code = ['api_code' => sha1(time() . env('APP_KEY') . Car::get()->last()->id)];
-        $data = array_merge($data, $code);
+        $data['api_code'] = CodeGeneratorHelper::generateApiCode();
 
         $car = Car::create($data);
 

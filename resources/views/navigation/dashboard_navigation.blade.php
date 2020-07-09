@@ -167,7 +167,6 @@
         </li>
 
         <div class="topbar-divider d-none d-sm-block"></div>
-
         <li class="nav-item dropdown no-arrow">
             <button class="nav-link dropdown-toggle bg-transparent border-0 text-gray-600"
                     type="button" id="language-switcher"
@@ -176,18 +175,9 @@
             </button>
             <div class="dropdown-menu align-items-center" style="max-width: 3rem; min-width: 3rem;"
                  aria-labelledby="language-switcher">
-                @foreach($locales as $locale)
-                    @empty(Route::current()->token)
-                        @php($data = ['locale' => $locale, 'token' => Route::current()->token])
-                    @else
-                        @php($data = ['locale' => $locale])
-                    @endempty
-                    <a href="{{ route(Route::currentRouteName(), $data) }}"
-                       class="dropdown-item p-0 text-center py-2">{{ Str::upper($locale) }}</a>
-                @endforeach
+                @include('partials.language_switcher')
             </div>
         </li>
-
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -10,14 +10,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class SendResetPasswordEmail implements ShouldQueue
+class SendResetPasswordEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 10;
 
     protected User   $user;
-    protected        $token;
+    protected string $token;
 
     public function __construct(User $user, $token)
     {
@@ -27,9 +27,6 @@ class SendResetPasswordEmail implements ShouldQueue
 
     public function handle()
     {
-        if (true) {
-            $this->release(30);
-        }
         info('user: ' . $this->user->id . ' send reset password mail');
         $this->user->notify(new LocaleResetPassword($this->token));
     }

@@ -38,12 +38,12 @@
                         data-title="{{ __('dashboard.general.forms.confirm') }}"
                         data-cancel="{{ __('dashboard.general.forms.cancel') }}"
                         data-confirm="{{ __('dashboard.general.forms.ok') }}">
-                    <span class="text">{{ __('dashboard.cars.CRUD.delete') }}</span>
+                    <span class="text">{{ __('dashboard.general.CRUD.delete') }} {{ __('dashboard.cars.cars') }}</span>
                 </button>
             </form>
 
             <a href="{{ route('cars.create', app()->getLocale()) }}" class="btn btn-success">
-                <span class="text">{{ __('dashboard.cars.CRUD.create') }}</span>
+                <span class="text">{{ __('dashboard.general.CRUD.create') }} {{ __('dashboard.cars.car') }}</span>
             </a>
         </div>
         <div class="card-body">
@@ -78,6 +78,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                     <tr>
+                        <th>{{ __('dashboard.cars.table.image') }}</th>
                         <th>{{ __('dashboard.cars.table.name') }}</th>
                         <th>{{ __('dashboard.cars.table.brand_name') }}</th>
                         <th>{{ __('dashboard.cars.table.api_key') }}</th>

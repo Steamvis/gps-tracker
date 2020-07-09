@@ -1,12 +1,10 @@
-var tbodyQuerySelector = 'table[id=dataTable] tbody';
-
-var tbody = document.querySelector(tbodyQuerySelector),
+var tbodyQuerySelector = 'table[id=dataTable] tbody',
+    tbody = document.querySelector(tbodyQuerySelector),
     tbodyElements = document.querySelectorAll(tbodyQuerySelector + ' tr'),
     checkedTableElements = [];
 
 tbody.onclick = function (event) {
     let target = event.target.closest('tr')
-        // id = target.getAttribute('data-car-id')
 
     if (target) {
         checkChecked(target)

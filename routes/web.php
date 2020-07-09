@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => redirect(route('landing', app()->getLocale())));
 
+// landing
 Route::group([
     'prefix'     => '{locale}',
     'middleware' => ['locale']
@@ -17,6 +18,7 @@ Route::group([
     Route::get('/', 'HomeController@index')->name('landing');
 });
 
+// dashboard
 Route::group([
     'prefix'     => '{locale}',
     'middleware' => ['locale', 'verified']
@@ -33,6 +35,6 @@ Route::group([
     Route::resources([
         'cars' => 'Cars\CarsController',
     ]);
-    Route::delete('destroy', 'Cars\CarsController@destroyMany')->name('cars.destroy.many');
+    Route::delete('cars', 'Cars\CarsController@destroyMany')->name('cars.destroy.many');
 });
 

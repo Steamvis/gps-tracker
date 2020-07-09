@@ -5,7 +5,14 @@ return [
     'general'    => [
         'unknown' => 'unknown',
         'search'  => 'search',
+        'CRUD'         => [
+            'create' => 'Create',
+            'delete' => 'Delete',
+            'edit'   => 'Edit',
+            'view'   => 'Show'
+        ],
         'forms'   => [
+            'choose file'    => 'Choose file',
             'confirm'        => 'Are you sure?',
             'ok'             => 'yes',
             'select all'     => 'Check all',
@@ -40,6 +47,7 @@ return [
         'connected'    => 'Connected',
         'disconnected' => 'Disconnected',
         'table'        => [
+            'image'       => 'Image',
             'name'        => 'Name',
             'brand_name'  => 'Brand',
             'driver'      => 'Driver',
@@ -51,12 +59,6 @@ return [
             'description' => 'Description',
             'color'       => 'color',
             'api_key'     => 'api key',
-        ],
-        'CRUD'         => [
-            'create' => 'Create transport',
-            'delete' => 'Delete transport',
-            'edit'   => 'Edit transport',
-            'view'   => 'Show transport'
         ],
         'result'       => [
             'create' => 'created a transport',

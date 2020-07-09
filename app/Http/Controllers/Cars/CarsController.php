@@ -8,7 +8,11 @@ use App\Models\Country;
 use App\Services\Cars\CreateCar;
 use App\Services\Cars\DestroyCar;
 use App\Services\Cars\DestroyCars;
+use App\Services\Cars\UpdateCar;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CarsController extends Controller
@@ -17,21 +21,9 @@ class CarsController extends Controller
     {
         $cars = Car::with('brand', 'points')->whereCompanyId(auth()->user()->company_id);
 
-        if ($request->ajax()) {
-            $cars = $cars->select([
-                'id',
-                'name',
-                'mark_id',
-                'api_code',
-                'gov_number',
-                'vin_number',
-                'year',
-                'color'
-            ]);
-        }
-
         $cars = $cars->paginate(10);
 
+        //////////////////////////////////
         $carsConnectedCounter = $cars->filter(function ($car) {
             return $car->isConnectedMap;
         })->count();
@@ -39,8 +31,7 @@ class CarsController extends Controller
         $carsDisconnectedCounter = $cars->filter(function ($car) {
             return !$car->isConnectedMap;
         })->count();
-
-//        auth()->user()->company->updateConnecterCarsCounter();
+        ///////////////////////////////
 
         return view('dashboard.cars.index', compact('cars', 'carsConnectedCounter', 'carsDisconnectedCounter'));
     }
@@ -61,19 +52,20 @@ class CarsController extends Controller
             'gov_number'  => $request->gov_number,
             'description' => $request->description,
             'year'        => $request->year,
-            'mark_id'     => !$request->mark_id ? 1 : $request->mark_id
+            'mark_id'     => !$request->mark_id ? 1 : $request->mark_id,
+            'image'       => $request->image
         ]);
 
         Alert::success(__('dashboard.general.result.success'), __('dashboard.cars.result.create'));
         return redirect(route('cars.index', app()->getLocale()));
     }
 
-    public function show()
+    public function show(string $locale, Car $car)
     {
-        dd('show');
+        return $car;
     }
 
-    public function destroy($locale, Car $car)
+    public function destroy(string $locale, Car $car)
     {
         app(DestroyCar::class)->execute([
             'id' => $car->id
@@ -91,5 +83,28 @@ class CarsController extends Controller
 
         Alert::success(__('dashboard.general.result.success'), __('dashboard.cars.result.delete'));
         return redirect()->back();
+    }
+
+    public function edit(string $locale, Car $car)
+    {
+        return $this->create()->with('car', $car);
+    }
+
+    public function update(Request $request, string $locale, Car $car)
+    {
+        app(UpdateCar::class)->execute([
+            'id'          => $car->id,
+            'name'        => $request->name,
+            'color'       => $request->color,
+            'company_id'  => auth()->user()->company->id,
+            'vin_number'  => $request->vin_number,
+            'gov_number'  => $request->gov_number,
+            'description' => $request->description,
+            'year'        => $request->year,
+            'mark_id'     => !$request->mark_id ? 1 : $request->mark_id,
+            'image'       => $request->image
+        ]);
+
+        return back();
     }
 }

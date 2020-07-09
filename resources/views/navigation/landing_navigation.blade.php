@@ -17,15 +17,7 @@
                     </button>
                     <div class="dropdown-menu align-items-center" style="max-width: 3rem; min-width: 3rem;"
                          aria-labelledby="language-switcher">
-                        @foreach($locales as $locale)
-                            @empty(Route::current()->token)
-                                @php($data = ['locale' => $locale, 'token' => Route::current()->token])
-                            @else
-                                @php($data = ['locale' => $locale])
-                            @endempty
-                            <a href="{{ route(Route::currentRouteName(), $data) }}"
-                               class="dropdown-item p-0 text-center py-2">{{ Str::upper($locale) }}</a>
-                        @endforeach
+                        @include('partials.language_switcher')
                     </div>
                 </div>
                 @guest

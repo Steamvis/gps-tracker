@@ -16,10 +16,12 @@
                             @csrf
                             <div class="form-group row">
                                 <div class="col-sm-12 mb-3 mb-sm-0">
-                                    <input type="text" class="form-control form-control-user"
-                                           id="title"
-                                           name="title"
-                                           placeholder="Title">
+                                    <input type="text" class="form-control form-control-user
+                            @error('name') border-danger" style="background-color: rgba(255,0,0,0.14)" @else" @enderror
+                                    id="title"
+                                    name="title"
+                                    placeholder="Title"
+                                    required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -46,9 +48,8 @@
                             <button type="submit" class="btn btn-primary btn-user btn-block">
                                 {{ __('dashboard.company.register company') }}
                             </button>
-                            <hr>
                         </form>
-                        <hr>
+                        @include('partials.errors')
                     </div>
                 </div>
             </div>

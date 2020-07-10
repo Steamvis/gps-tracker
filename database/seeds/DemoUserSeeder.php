@@ -156,7 +156,7 @@ class DemoUserSeeder extends Seeder
 
         DB::table('cars')->insert($cars);
 
-        factory(Car::class, 1)->create([
+        factory(Car::class, 20)->create([
             'company_id' => 1,
         ]);
 

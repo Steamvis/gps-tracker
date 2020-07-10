@@ -60,7 +60,11 @@
 @section('pagination')
     <div class="card-footer">
         <div class="d-flex justify-content-between">
-            {{ $cars->links('dashboard.pagination') }}
+            @isset($search)
+                {{ $cars->appends(['search' => $search])->links('dashboard.pagination') }}
+            @else
+                {{ $cars->links('dashboard.pagination') }}
+            @endisset
         </div>
     </div>
 @endsection

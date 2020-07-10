@@ -18,19 +18,35 @@ class CarsController extends Controller
     {
         $cars = Car::with('brand', 'points')->whereCompanyId(auth()->user()->company_id);
 
+        if ($request->has('search')) {
+            $search = $request->search;
+            $cars   = $cars
+                ->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('vin_number', 'LIKE', "%{$search}%")
+                ->orWhere('gov_number', 'LIKE', "%{$search}%")
+                ->orWhere('api_code', 'LIKE', "%{$search}%")
+                ->orWhere('year', $search)
+                ->orWhereIn('mark_id',
+                    fn($query) => $query->select('id')->from('car_marks')->where('name', 'LIKE', "%{$search}%")
+                )
+                ->paginate(10);
+
+            return view('dashboard.cars.index', compact('cars', 'search'));
+        }
+
         $cars = $cars->paginate(10);
 
-        //////////////////////////////////
-        $carsConnectedCounter = $cars->filter(function ($car) {
-            return $car->isConnectedMap;
-        })->count();
+//        //////////////////////////////////
+//        $carsConnectedCounter = $cars->filter(function ($car) {
+//            return $car->isConnectedMap;
+//        })->count();
+//
+//        $carsDisconnectedCounter = $cars->filter(function ($car) {
+//            return !$car->isConnectedMap;
+//        })->count();
+//        ///////////////////////////////
 
-        $carsDisconnectedCounter = $cars->filter(function ($car) {
-            return !$car->isConnectedMap;
-        })->count();
-        ///////////////////////////////
-
-        return view('dashboard.cars.index', compact('cars', 'carsConnectedCounter', 'carsDisconnectedCounter'));
+        return view('dashboard.cars.index', compact('cars'));
     }
 
     public function create()

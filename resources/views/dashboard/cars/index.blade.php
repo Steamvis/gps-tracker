@@ -11,12 +11,12 @@
             </div>
             <div
                 class="bg-danger text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
-                {{ $carsDisconnectedCounter }}
+                {{--                {{ $carsDisconnectedCounter }}--}}
                 <span>{{ __('dashboard.cars.disconnected') }}</span>
             </div>
             <div
                 class="bg-success text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
-                {{ $carsConnectedCounter }}
+                {{--                {{ $carsConnectedCounter }}--}}
                 <span>{{ __('dashboard.cars.connected') }}</span>
             </div>
         </div>
@@ -62,16 +62,29 @@
 
 
                     <div>
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light"
-                                   placeholder="{{ __('dashboard.general.search') }}"
-                                   aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
+                        <form action="{{ route('cars.index', app()->getLocale()) }}">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <a href="{{ route('cars.index', app()->getLocale()) }}"
+                                       class="btn btn-primary" type="submit">
+                                        <i class="fas fa-redo fa-sm"></i>
+                                    </a>
+                                </div>
+                                <input type="text" class="form-control bg-light"
+                                       name="search"
+                                       @isset($search)
+                                       value="{{ $search }}"
+                                       @else
+                                       value="{{ old('search') }}"
+                                       placeholder="{{ __('dashboard.general.search') }}"
+                                    @endisset>
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search fa-sm"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
 
                 </div>

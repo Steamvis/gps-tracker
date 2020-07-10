@@ -77,7 +77,7 @@ class Car extends Model
         ];
     }
 
-    public function getIsConnectedMapAttribute()
+    public function getIsConnectedMapAttribute(): bool
     {
         $points = $this->points;
 

@@ -9,10 +9,7 @@ use App\Services\Cars\CreateCar;
 use App\Services\Cars\DestroyCar;
 use App\Services\Cars\DestroyCars;
 use App\Services\Cars\UpdateCar;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CarsController extends Controller
@@ -62,7 +59,7 @@ class CarsController extends Controller
 
     public function show(string $locale, Car $car)
     {
-        return $car;
+        return view('dashboard.cars.show', compact('car'));
     }
 
     public function destroy(string $locale, Car $car)

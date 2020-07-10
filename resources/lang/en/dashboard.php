@@ -3,9 +3,10 @@
 return [
     ///////////////////////////////////////////////
     'general'    => [
-        'unknown' => 'unknown',
-        'search'  => 'search',
-        'CRUD'         => [
+        'unknown' => 'Unknown',
+        'search'  => 'Search',
+        'back'    => 'Back',
+        'CRUD'    => [
             'create' => 'Create',
             'delete' => 'Delete',
             'edit'   => 'Edit',
@@ -14,14 +15,14 @@ return [
         'forms'   => [
             'choose file'    => 'Choose file',
             'confirm'        => 'Are you sure?',
-            'ok'             => 'yes',
+            'ok'             => 'Yes',
             'select all'     => 'Check all',
             'unselect all'   => 'Uncheck all',
             'select year'    => 'Select year',
             'select brand'   => 'Select brand',
             'select country' => 'Select country',
-            'actions'        => 'actions',
-            'of'             => 'of',
+            'actions'        => 'Actions',
+            'of'             => 'Of',
             'cancel'         => 'cancel',
         ],
         'result'  => [
@@ -57,18 +58,18 @@ return [
             'gov_number'  => 'Car number',
             'location'    => 'Location',
             'description' => 'Description',
-            'color'       => 'color',
-            'api_key'     => 'api key',
+            'color'       => 'Color',
+            'api_key'     => 'API key',
         ],
         'result'       => [
-            'create' => 'created a transport',
-            'delete' => 'deleted a transport',
+            'create' => 'Created a transport',
+            'delete' => 'Deleted a transport',
         ]
     ],
     'company'    => [
         'register company' => 'Register company',
         'table'            => [
-            'name',
+            'name'
         ],
     ],
     ///////////////////////////////////////////////

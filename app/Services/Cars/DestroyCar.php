@@ -27,8 +27,8 @@ class DestroyCar extends AbstractBaseService
             Company::updateCarsCounter(auth()->user()->company);
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

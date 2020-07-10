@@ -2,7 +2,7 @@
 @foreach($cars as $car)
     <tr data-car-id="{{ $car->id }}" style="cursor: pointer">
         <td class="text-center">
-            <img src="{{ $car->image }}" alt="car-image" height="100px">
+            <img src="{{ $car->image }}" alt="car-image" width="150px" height="100px">
         </td>
         <td>{{ $car->name }}</td>
         <td>{{ $car->brand->name }}</td>

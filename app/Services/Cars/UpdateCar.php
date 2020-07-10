@@ -21,6 +21,8 @@ class UpdateCar extends AbstractBaseService
     {
         $user = auth()->user();
 
+        $data['vin_number'] = $data['vin_number'] === __('dashboard.general.unknown') ? '' : $data['vin_number'];
+
         if (isset($data['image'])) {
             $data['image_path'] = app(UploadImage::class)->execute([$data['image']]);
         }

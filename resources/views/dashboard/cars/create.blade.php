@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('content')
+    @include('dashboard.breadcrumbs')
     <div class="row">
         <div class="col-6 offset-3">
             <form
@@ -32,8 +33,22 @@
                         <input name='image' onchange="handleChange(this)" type="file" class="custom-file-input"
                                id="imageInput">
                         <div class="__image-file @isset($car) @else d-none @endisset">
-                            <img width="200px" src="@isset($car) {{ $car->image }} @endisset">
-                            <span>&times;</span>
+                            @isset($car)
+                                <img width="200px" style="object-fit: cover;" src="{{ $car->image }}">
+                                <span data-title="{{ __('dashboard.general.forms.confirm') }}"
+                                      data-cancel="{{ __('dashboard.general.forms.cancel') }}"
+                                      data-confirm="{{ __('dashboard.general.forms.ok') }}"
+                                      data-token="{{ csrf_token() }}"
+                                      data-car="{{ $car->id }}"
+                                      action="{{ route('images.destroy', [
+                                            'locale' => app()->getLocale(),
+                                        ]) }}">
+                                &times;
+                                </span>
+                            @else
+                                <img width="200px" style="object-fit: cover;">
+                                <span>&times;</span>
+                            @endisset
                         </div>
                         <label class="custom-file-label" for="imageInput"
                                data-translate="{{ __('dashboard.general.forms.choose file') }}...">
@@ -84,13 +99,13 @@
                                 @for($year = \Carbon\Carbon::now()->year; $year >= 1960; $year--);
                                 <option
                                     @isset($car)
-                                        @if($year === (int)$car->year)
-                                            selected
-                                        @endif
+                                    @if($year === (int)$car->year)
+                                    selected
+                                    @endif
                                     @else
-                                        @if($year === (int)old('year'))
-                                         selected
-                                        @endif
+                                    @if($year === (int)old('year'))
+                                    selected
+                                    @endif
                                     @endisset>
                                     {{ $year }}
                                 </option>
@@ -108,13 +123,13 @@
                                         @foreach($country->brands as $brand)
                                             <option value="{{ $brand->id }}"
                                                     @isset($car)
-                                                        @if($brand->id === (int)$car->brand->id)
-                                                            selected
-                                                        @endif
+                                                    @if($brand->id === (int)$car->brand->id)
+                                                    selected
+                                                    @endif
                                                     @else
-                                                        @if($brand->id === (int)old('mark_id'))
-                                                            selected
-                                                        @endif
+                                                    @if($brand->id === (int)old('mark_id'))
+                                                    selected
+                                                    @endif
                                                     @endisset
                                                     data-content="{{ Str::upper($brand->name) }}">
                                             </option>
@@ -135,5 +150,6 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ mix('admin/js/app_common.js') }}"></script>
     <script src="{{ mix('admin/js/upload-file.js') }}"></script>
 @endsection

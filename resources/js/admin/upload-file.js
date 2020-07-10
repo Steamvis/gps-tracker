@@ -9,6 +9,7 @@ var reader = new FileReader(),
         'image/png'
     ];
 
+
 changeLabelName(label.getAttribute('data-translate'))
 
 function handleChange(input) {
@@ -30,9 +31,49 @@ function handleChange(input) {
 }
 
 // functions
-removeImgElement.onclick = function (event) {
-    removeFile()
-};
+if (removeImgElement.hasAttribute('data-car')) {
+    removeImgElement.onclick = function (event) {
+        let url = removeImgElement.getAttribute('action'),
+            image = imgElement.src,
+            title = removeImgElement.getAttribute('data-title'),
+            confirm = removeImgElement.getAttribute('data-confirm'),
+            cancel = removeImgElement.getAttribute('data-cancel'),
+            car = removeImgElement.getAttribute('data-car'),
+            token = removeImgElement.getAttribute('data-token');
+
+        Swal.fire({
+            title: title,
+            icon: 'warning',
+            showCancelButton: true,
+            focusCancel: true,
+            confirmButtonColor: '#d33',
+            cancelButtonText: cancel,
+            confirmButtonText: confirm,
+        }).then(function (request) {
+            if (request.value) {
+                jQuery.ajax({
+                    url: url,
+                    data: {
+                        _token: token,
+                        image: image,
+                        car: car
+                    },
+                    method: 'DELETE',
+                    success: function (data) {
+                        if (data) {
+                            removeFile()
+                        }
+                    }
+                })
+            }
+        })
+    }
+} else {
+    removeImgElement.onclick = function (event) {
+        removeFile()
+    };
+}
+
 
 function addFile(file) {
     imgBlock.classList.remove('d-none')
@@ -48,6 +89,10 @@ function removeFile() {
     changeLabelName(label.getAttribute('data-translate'))
 }
 
+function removeFileFromStorage() {
+    callConfirmModal(removeImgElement)
+}
+
 function changeLabelName(name) {
     label.textContent = name;
 }
@@ -61,3 +106,4 @@ function isValidFile(file) {
 
     return false;
 }
+

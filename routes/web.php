@@ -36,5 +36,6 @@ Route::group([
         'cars' => 'Cars\CarsController',
     ]);
     Route::delete('cars', 'Cars\CarsController@destroyMany')->name('cars.destroy.many');
+    Route::delete('image', 'Image\ImageController@destroy')->name('images.destroy');
 });
 

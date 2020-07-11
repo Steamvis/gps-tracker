@@ -10,12 +10,13 @@ return [
             'create' => 'Create',
             'delete' => 'Delete',
             'edit'   => 'Edit',
-            'view'   => 'Show'
+            'view'   => 'Show',
         ],
         'forms'   => [
+            'submit'         => 'Submit',
             'choose file'    => 'Choose file',
             'confirm'        => 'Are you sure?',
-            'ok'             => 'Yes',
+            'yes'            => 'Yes',
             'select all'     => 'Check all',
             'unselect all'   => 'Uncheck all',
             'select year'    => 'Select year',
@@ -26,8 +27,9 @@ return [
             'cancel'         => 'cancel',
         ],
         'result'  => [
-            'success' => 'Successfully'
-        ]
+            'success' => 'Successfully',
+            'update'  => 'Successfully updated',
+        ],
     ],
     ///////////////////////////////////////////////
     'statistics' => [
@@ -64,12 +66,12 @@ return [
         'result'       => [
             'create' => 'Created a transport',
             'delete' => 'Deleted a transport',
-        ]
+        ],
     ],
     'company'    => [
         'register company' => 'Register company',
         'table'            => [
-            'name'
+            'name',
         ],
     ],
     ///////////////////////////////////////////////
@@ -84,7 +86,7 @@ return [
         'end route'       => 'End of route',
         'km'              => 'km',
         'current route'   => 'Current',
-        'time on the way' => 'Time on the way'
+        'time on the way' => 'Time on the way',
     ],
     ///////////////////////////////////////////////
 ];

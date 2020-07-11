@@ -9,7 +9,7 @@ class UploadImage extends AbstractBaseService
     public function rules(): array
     {
         return [
-            'image' => 'image|mimes:jpeg,jpg,png'
+            'image' => 'image|mimes:jpeg,jpg,png',
         ];
     }
 

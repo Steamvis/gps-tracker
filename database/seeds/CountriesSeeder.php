@@ -304,7 +304,7 @@ class CountriesSeeder extends Seeder
                 'name_ru'   => 'Беларусь',
                 'name_en'   => 'Belarus',
                 'code'      => 'BY',
-                'flag_path' => 'images/flags/AE.png'
+                'flag_path' => 'images/flags/BY.png'
             ],
         ];
         DB::table('countries')->insert($data);

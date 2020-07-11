@@ -2,7 +2,7 @@
 
 namespace App\Services\Cars;
 
-use App\Helpers\CodeGeneratorHelper;
+use App\Helpers\ApiCodeGenerator;
 use App\Models\Car\Car;
 use App\Models\Company;
 use App\Services\AbstractBaseService;
@@ -36,7 +36,7 @@ class CreateCar extends AbstractBaseService
 
         $this->validate($data);
 
-        $data['api_code'] = CodeGeneratorHelper::generateApiCode();
+        $data['api_code'] = ApiCodeGenerator::generateApiCode();
 
         $car = Car::create($data);
 

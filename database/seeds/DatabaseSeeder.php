@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CountriesSeeder::class);
         $this->call(CarMarkSeeder::class);
         $this->call(CarCharacteristicsSeeder::class);
+        $this->call(SettingsSeeder::class);
         $this->call(DemoUserSeeder::class);
     }
 }

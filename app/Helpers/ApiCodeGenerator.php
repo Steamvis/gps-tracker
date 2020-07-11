@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-class CodeGeneratorHelper
+class ApiCodeGenerator
 {
     public static function generateApiCode()
     {

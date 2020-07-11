@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Services\Users\CreateUser;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -41,37 +42,27 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param array $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name'  => ['required', 'string', 'max:255'],
-            'gender'     => ['required', 'in:male,female'],
-            'email'      => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:users'],
-            'password'   => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        return Validator::make($data, app(CreateUser::class)->rules());
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param array $data
+     * @param  array  $data
      * @return User
      */
-    protected function create(array $data)
+    protected function create(array $data): User
     {
-        return User::create([
-            'first_name' => $data['first_name'],
-            'last_name'  => $data['last_name'],
-            'gender'     => $data['gender'],
-            'email'      => $data['email'],
-            'password'   => Hash::make($data['password']),
-        ]);
+        return app(CreateUser::class)->execute(
+            [
+                'first_name' => $data['first_name'],
+                'last_name'  => $data['last_name'],
+                'gender'     => $data['gender'],
+                'email'      => $data['email'],
+                'password'   => Hash::make($data['password']),
+            ]
+        );
     }
 }

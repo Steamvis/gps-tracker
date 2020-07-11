@@ -28,10 +28,13 @@
                         <map-car style="display: none"
                                  data-car-id="{{ $car->id }}"
                                  data-car-name="{{ $car->name_full }}"
+                                 @if(auth()->user()->settings->where('setting_id', 1)->first()->value)
+                                 data-car-point-image="{{ $car->image }}"
+                                 @else
                                  data-car-point-image="{{ asset('images/map/car-point.png') }}"
+                                 @endif
                                  data-car-gov-number="{{ $car->gov_number }}"
                                  data-car-gov-number-translate="{{ __('dashboard.cars.table.gov_number') }}"
-
                                  data-car-location-latitude="{{ $car->location->latitude }}"
                                  data-car-location-longitude="{{ $car->location->longitude }}">
                         </map-car>
@@ -104,12 +107,12 @@
                                         <map-sections style="display: none" data-route-id="{{ $route->id }}">
                                             @foreach($route->sections as $section)
                                                 <section
-                                                    data-id="{{ $section->id }}"
-                                                    data-start-point-latitude="{{ $section->start_point->latitude }}"
-                                                    data-start-point-longitude="{{ $section->start_point->longitude }}"
-                                                    data-end-point-latitude="{{ $section->end_point->latitude }}"
-                                                    data-end-point-longitude="{{ $section->end_point->longitude }}"
-                                                    data-moving-time="{{ $section->moving_time }}">
+                                                        data-id="{{ $section->id }}"
+                                                        data-start-point-latitude="{{ $section->start_point->latitude }}"
+                                                        data-start-point-longitude="{{ $section->start_point->longitude }}"
+                                                        data-end-point-latitude="{{ $section->end_point->latitude }}"
+                                                        data-end-point-longitude="{{ $section->end_point->longitude }}"
+                                                        data-moving-time="{{ $section->moving_time }}">
                                                 </section>
                                             @endforeach
                                         </map-sections>

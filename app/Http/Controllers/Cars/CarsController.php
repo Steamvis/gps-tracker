@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Cars;
 
 use App\Http\Controllers\Controller;
 use App\Models\Car\Car;
+use App\Models\Car\CarPoint;
 use App\Models\Country;
 use App\Services\Cars\CreateCar;
 use App\Services\Cars\DestroyCar;
 use App\Services\Cars\DestroyCars;
 use App\Services\Cars\UpdateCar;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -37,16 +39,6 @@ class CarsController extends Controller
 
         $cars = $cars->paginate(auth()->user()->settings->where('setting_id', 2)->first()->value);
 
-//        //////////////////////////////////
-//        $carsConnectedCounter = $cars->filter(function ($car) {
-//            return $car->isConnectedMap;
-//        })->count();
-//
-//        $carsDisconnectedCounter = $cars->filter(function ($car) {
-//            return !$car->isConnectedMap;
-//        })->count();
-//        ///////////////////////////////
-
         return view('dashboard.cars.index', compact('cars'));
     }
 
@@ -74,7 +66,6 @@ class CarsController extends Controller
         );
 
         Alert::success(__('dashboard.general.result.success'), __('dashboard.cars.result.create'));
-
         return redirect(route('cars.index', app()->getLocale()));
     }
 

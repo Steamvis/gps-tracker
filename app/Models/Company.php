@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Car\Car;
+use App\Models\Car\CarPoint;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,12 +29,19 @@ class Company extends Model
     {
         $company->cars_counter = $company->cars->count();
         $company->save();
+
+
         Cache::set('company_cars_counter' . $company->id, $company->cars_counter);
     }
 
-    public function updateDisconnectedCarsCounter()
+    public function getConnectedCarsCounterAttribute()
     {
-        $this->cars->map(fn($car) => $car->is_connected_map);
+        return CarPoint::all()->filter(fn($car) => $car->created_at->diffInMinutes() < 5)->count();
+    }
+
+    public function getDisconnectedCarsCounterAttribute()
+    {
+        return $this->cars_counter - $this->getConnectedCarsCounterAttribute();
     }
 
     public function owner(): BelongsTo

@@ -1,7 +1,6 @@
 @extends('layouts.dashboard')
 
 @section('content')
-
     <div class="mb-3">
         <div class="d-flex justify-content-between">
             <div
@@ -11,12 +10,12 @@
             </div>
             <div
                 class="bg-danger text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
-                {{--                {{ $carsDisconnectedCounter }}--}}
+                {{ $company->disconnected_cars_counter }}
                 <span>{{ __('dashboard.cars.disconnected') }}</span>
             </div>
             <div
                 class="bg-success text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
-                {{--                {{ $carsConnectedCounter }}--}}
+                {{ $company->connected_cars_counter }}
                 <span>{{ __('dashboard.cars.connected') }}</span>
             </div>
         </div>

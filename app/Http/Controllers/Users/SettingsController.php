@@ -7,7 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\User\UserSettings;
 use App\Services\Users\Settings\UpdateSettings;
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SettingsController extends Controller
 {
@@ -29,6 +32,8 @@ class SettingsController extends Controller
                 Setting::CAR_DATATABLE_PAGINATE     => $request->get(Setting::CAR_DATATABLE_PAGINATE),
             ]
         );
+
+        Alert::success(__('dashboard.general.result.success'), __('dashboard.general.result.update'));
 
         return back();
     }

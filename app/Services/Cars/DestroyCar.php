@@ -18,7 +18,7 @@ class DestroyCar extends AbstractBaseService
 
     public function execute(array $data): bool
     {
-        $car = Car::findOrFail($data['id']);
+        $car = Car::find($data['id']);
 
         if (CarHelper::checkUserOwnsCar($car)) {
             $this->validate($data);

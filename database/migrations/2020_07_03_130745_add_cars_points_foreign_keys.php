@@ -35,17 +35,19 @@ class AddCarsPointsForeignKeys extends Migration
     public function down()
     {
         Schema::table('cars_points', function (Blueprint $table) {
-            $table->dropIndex([
-                'cars_points_car_id_foreign',
-                'cars_points_route_id_foreign',
-                'cars_points_section_id_foreign',
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->dropIndex([
+                    'cars_points_car_id_foreign',
+                    'cars_points_route_id_foreign',
+                    'cars_points_section_id_foreign',
 
-            ]);
-            $table->dropForeign([
-                'cars_points_car_id_foreign',
-                'cars_points_route_id_foreign',
-                'cars_points_section_id_foreign',
-            ]);
+                ]);
+                $table->dropForeign([
+                    'cars_points_car_id_foreign',
+                    'cars_points_route_id_foreign',
+                    'cars_points_section_id_foreign',
+                ]);
+            }
         });
     }
 }

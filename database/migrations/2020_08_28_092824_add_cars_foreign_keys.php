@@ -26,18 +26,20 @@ class AddCarsForeignKeys extends Migration
     public function down()
     {
         Schema::table('cars', function (Blueprint $table) {
-            $table->dropUnique([
-                'cars_api_code_unique'
-            ]);
-            $table->dropForeign([
-                'cars_company_id_foreign',
-                'cars_mark_id_foreign'
-            ]);
-            $table->dropIndex([
-                'cars_api_code_unique',
-                'cars_company_id_foreign',
-                'cars_mark_id_foreign'
-            ]);
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->dropUnique([
+                    'cars_api_code_unique'
+                ]);
+                $table->dropForeign([
+                    'cars_company_id_foreign',
+                    'cars_mark_id_foreign'
+                ]);
+                $table->dropIndex([
+                    'cars_api_code_unique',
+                    'cars_company_id_foreign',
+                    'cars_mark_id_foreign'
+                ]);
+            }
         });
     }
 }

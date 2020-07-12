@@ -20,12 +20,14 @@ class AddCarsRoutesForeignKeys extends Migration
     public function down()
     {
         Schema::table('cars_routes', function (Blueprint $table) {
-            $table->dropForeign([
-                'cars_routes_route_id_foreign'
-            ]);
-            $table->dropIndex([
-                'cars_routes_route_id_foreign'
-            ]);
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->dropForeign([
+                    'cars_routes_route_id_foreign'
+                ]);
+                $table->dropIndex([
+                    'cars_routes_route_id_foreign'
+                ]);
+            }
         });
     }
 }

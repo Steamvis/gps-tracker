@@ -10,7 +10,6 @@ use App\Services\Cars\CreateCar;
 use App\Services\Cars\DestroyCar;
 use App\Services\Cars\DestroyCars;
 use App\Services\Cars\UpdateCar;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -37,7 +36,6 @@ class CarsController extends Controller
 
             return view('dashboard.cars.index', compact('cars', 'search'));
         }
-
         $cars = $cars->paginate(auth()->user()->settings->where('setting_id', 2)->first()->value);
 
         return view('dashboard.cars.index', compact('cars'));
@@ -54,15 +52,15 @@ class CarsController extends Controller
     {
         app(CreateCar::class)->execute(
             [
-                'name' => $request->name,
-                'color' => $request->color,
-                'company_id' => auth()->user()->company->id,
-                'vin_number' => $request->vin_number,
-                'gov_number' => $request->gov_number,
+                'name'        => $request->name,
+                'color'       => $request->color,
+                'company_id'  => auth()->user()->company->id,
+                'vin_number'  => $request->vin_number,
+                'gov_number'  => $request->gov_number,
                 'description' => $request->description,
-                'year' => $request->year,
-                'mark_id' => !$request->mark_id ? 1 : $request->mark_id,
-                'image' => $request->image,
+                'year'        => $request->year,
+                'mark_id'     => !$request->mark_id ? 1 : $request->mark_id,
+                'image'       => $request->image,
             ]
         );
 
@@ -118,16 +116,16 @@ class CarsController extends Controller
     {
         $result = app(UpdateCar::class)->execute(
             [
-                'id' => $car->id,
-                'name' => $request->name,
-                'color' => $request->color,
-                'company_id' => auth()->user()->company->id,
-                'vin_number' => $request->vin_number,
-                'gov_number' => $request->gov_number,
+                'id'          => $car->id,
+                'name'        => $request->name,
+                'color'       => $request->color,
+                'company_id'  => auth()->user()->company->id,
+                'vin_number'  => $request->vin_number,
+                'gov_number'  => $request->gov_number,
                 'description' => $request->description,
-                'year' => $request->year,
-                'mark_id' => !$request->mark_id ? 1 : $request->mark_id,
-                'image' => $request->image,
+                'year'        => $request->year,
+                'mark_id'     => !$request->mark_id ? 1 : $request->mark_id,
+                'image'       => $request->image,
             ]
         );
 

@@ -20,12 +20,14 @@ class AddCompaniesForeignKeys extends Migration
     public function down()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->dropUnique([
-                'companies_owner_id_unique'
-            ]);
-            $table->dropIndex([
-                'companies_owner_id_unique'
-            ]);
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->dropUnique([
+                    'companies_owner_id_unique'
+                ]);
+                $table->dropIndex([
+                    'companies_owner_id_unique'
+                ]);
+            }
         });
     }
 }

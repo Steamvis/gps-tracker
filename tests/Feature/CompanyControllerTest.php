@@ -5,17 +5,32 @@ namespace Tests\Feature;
 use App\Models\Company;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Feature\traits\TestUser;
 use Tests\TestCase;
 
 class CompanyControllerTest extends TestCase
 {
     use RefreshDatabase;
+    use DatabaseMigrations;
+    use TestUser;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->runDatabaseMigrations();
+        $this->createTestUser();
+
+        $this->user = User::find(2);
+        $this->be($this->user); // login
+    }
 
     /**
      * @group company
      */
-    public function testCanUserRegisterCompany()
+    public function test_can_user_register_company()
     {
         $user = factory(User::class)->create(['email_verified_at' => Carbon::now()]);
 
@@ -32,15 +47,6 @@ class CompanyControllerTest extends TestCase
         ));
 
         $this->assertDatabaseHas('companies', ['title' => $companyData['title']]);
-    }
-
-    /**
-     * @group company
-     */
-    public function testRegisterCompanyEqualsUser()
-    {
-        $this->testCanUserRegisterCompany();
-
-        $this->assertTrue(User::find(1)->id === Company::find(1)->owner->id);
+        $this->assertEquals(auth()->user()->company_id, Company::find(2)->id);
     }
 }

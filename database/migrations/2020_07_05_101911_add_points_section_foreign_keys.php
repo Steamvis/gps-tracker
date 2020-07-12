@@ -26,14 +26,16 @@ class AddPointsSectionForeignKeys extends Migration
     public function down()
     {
         Schema::table('points_section', function (Blueprint $table) {
-            $table->dropIndex([
-               'points_section_point_id_foreign',
-               'points_section_section_id_foreign',
-            ]);
-            $table->dropForeign([
-               'points_section_point_id_foreign',
-               'points_section_section_id_foreign',
-            ]);
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->dropIndex([
+                    'points_section_point_id_foreign',
+                    'points_section_section_id_foreign',
+                ]);
+                $table->dropForeign([
+                    'points_section_point_id_foreign',
+                    'points_section_section_id_foreign',
+                ]);
+            }
         });
     }
 }

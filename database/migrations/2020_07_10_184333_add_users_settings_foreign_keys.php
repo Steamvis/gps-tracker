@@ -27,14 +27,16 @@ class AddUsersSettingsForeignKeys extends Migration
     public function down()
     {
         Schema::table('users_settings', function (Blueprint $table) {
-            $table->dropIndex([
-                'users_settings_setting_id_foreign',
-                'users_settings_user_id_foreign'
-            ]);
-            $table->dropForeign([
-                'users_settings_setting_id_foreign',
-                'users_settings_user_id_foreign'
-            ]);
+            if (DB::getDriverName() !== 'sqlite') {
+                $table->dropIndex([
+                    'users_settings_setting_id_foreign',
+                    'users_settings_user_id_foreign'
+                ]);
+                $table->dropForeign([
+                    'users_settings_setting_id_foreign',
+                    'users_settings_user_id_foreign'
+                ]);
+            }
         });
     }
 }

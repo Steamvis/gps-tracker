@@ -2,6 +2,7 @@
 
 namespace App\Services\Cars;
 
+use App\Helpers\CarHelper;
 use App\Models\Car\Car;
 use App\Services\AbstractBaseService;
 
@@ -21,16 +22,17 @@ class DestroyCars extends AbstractBaseService
         $this->validate($data);
 
         foreach ($data['action'] as $id) {
-            if (Car::find($id)->company->owner_id !== auth()->user()->id) {
-                return false;
+            $car = Car::find($id);
+            if (CarHelper::checkUserOwnsCar($car)) {
+                Car::destroy($data['action']);
+
+                $user = auth()->user();
+                $user->company::updateCarsCounter($user->company);
+
+                return true;
             }
         }
 
-        Car::destroy($data['action']);
-
-        $user = auth()->user();
-        $user->company::updateCarsCounter($user->company);
-
-        return true;
+        return false;
     }
 }

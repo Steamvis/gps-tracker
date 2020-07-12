@@ -14,7 +14,7 @@ tbody.onclick = function (event) {
 }
 
 function highlight(target, toggle = true, method = false) {
-    let classes = ['bg-gradient-primary', 'text-white']
+    let classes = ['bg-gradient-primary',]
 
     if (toggle) {
         classes.forEach(value => {

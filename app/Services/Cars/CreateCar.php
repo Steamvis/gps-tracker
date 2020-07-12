@@ -20,8 +20,6 @@ class CreateCar extends AbstractBaseService
             'description' => 'nullable|string|min:10|max:500',
             'image_path'  => 'nullable|string',
             'mark_id'     => 'required|integer',
-            'driver_id'   => 'nullable|integer',
-            'manager_id'  => 'nullable|integer',
             'year'        => 'nullable|date_format:Y',
         ];
     }

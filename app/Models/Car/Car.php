@@ -35,7 +35,7 @@ class Car extends Model
     public function getMovingTimeAttribute()
     {
         $lastRoute = $this->routes->last();
-        $interval  = Carbon::parse($lastRoute->end_time)->diffAsCarbonInterval(Carbon::parse($lastRoute->start_time));
+        $interval = Carbon::parse($lastRoute->end_time)->diffAsCarbonInterval(Carbon::parse($lastRoute->start_time));
         return $interval->locale(app()->getLocale())->forHumans();
     }
 

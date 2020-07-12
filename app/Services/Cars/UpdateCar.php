@@ -4,6 +4,7 @@
 namespace App\Services\Cars;
 
 
+use App\Helpers\CarHelper;
 use App\Models\Car\Car;
 use App\Services\AbstractBaseService;
 use App\Services\FileSystem\UploadImage;
@@ -17,19 +18,24 @@ class UpdateCar extends AbstractBaseService
         ]);
     }
 
-    public function execute(array $data)
+    public function execute(array $data): bool
     {
         $user = auth()->user();
 
-        $data['vin_number'] = $data['vin_number'] === __('dashboard.general.unknown') ? '' : $data['vin_number'];
+        $car = Car::findOrFail($data['id']);
 
-        if (isset($data['image'])) {
-            $data['image_path'] = app(UploadImage::class)->execute([$data['image']]);
+        if (CarHelper::checkUserOwnsCar($car)) {
+            $data['vin_number'] = $data['vin_number'] === __('dashboard.general.unknown') ? '' : $data['vin_number'];
+
+            if (isset($data['image'])) {
+                $data['image_path'] = app(UploadImage::class)->execute([$data['image']]);
+            }
+
+            $this->validate($data);
+            $car->update($data);
+
+            return true;
         }
-
-        $this->validate($data);
-        $car = Car::findOrFail($data['id'])->update($data);
-
-        return $car;
+        return false;
     }
 }

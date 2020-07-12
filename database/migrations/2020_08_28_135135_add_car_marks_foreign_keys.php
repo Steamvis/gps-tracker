@@ -20,7 +20,12 @@ class AddCarMarksForeignKeys extends Migration
     public function down()
     {
         Schema::table('car_marks', function (Blueprint $table) {
-            //
+            $table->dropIndex([
+                'car_marks_country_id_foreign'
+            ]);
+            $table->dropForeign([
+                'car_marks_country_id_foreign'
+            ]);
         });
     }
 }

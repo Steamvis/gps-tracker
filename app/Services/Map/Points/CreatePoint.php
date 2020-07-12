@@ -2,9 +2,11 @@
 
 namespace App\Services\Map\Points;
 
-use App\CarRoute;
-use App\Models\CarPoint;
+use App\Models\Car\Car;
+use App\Models\Car\CarPoint;
+use App\Models\Car\CarRoute;
 use App\Services\AbstractBaseService;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class CreatePoint extends AbstractBaseService
@@ -14,15 +16,20 @@ class CreatePoint extends AbstractBaseService
     public function rules(): array
     {
         return [
-            'car_id'    => 'required|integer|exists:cars,id',
-            'api_code'  => [
+            'car_id' => 'required|integer|exists:cars,id',
+            'api_code' => [
                 'required',
-                'string',
+                'alpha_num',
                 'size:10',
-                Rule::exists('cars', 'api_code')->where('id', $this->data['car_id'])
+                Rule::in(
+                    Str::limit(
+                        Car::whereId($this->data['car_id'])->first()->api_code, 10, ''
+                    )
+                )
             ],
-            'latitude'  => 'required|numeric',
+            'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
+            'route_id' => 'required|integer|exists:cars_routes,id'
         ];
     }
 
@@ -30,29 +37,11 @@ class CreatePoint extends AbstractBaseService
     {
         $this->data = $data;
 
-        $this->validate($data);
+        $route = CarRoute::whereCarId($this->data['car_id'])->get()->last();
+        $this->data['route_id'] = $route->id;
 
-        $currentPoint = CarPoint::create($data);
+        $this->validate($this->data);
 
-        $car    = $currentPoint->car;
-        $points = CarPoint::where('car_id', $car->id)->latest()->limit(2)->get();
-        foreach ($points as $index => $point) {
-            if ($index + 1 < 2) {
-                $first = $points[$index + 1];
-                $last  = $points[$index];
-
-                $interval = ($last->created_at)->diffAsCarbonInterval($first->created_at);
-
-                CarRoute::create([
-                    'car_id'         => $first->car_id,
-                    'start_point_id' => $first->id,
-                    'end_point_id'   => $last->id,
-                    'moving_time_ru' => $interval->locale('ru')->forHumans(),
-                    'moving_time_en' => $interval->locale('en')->forHumans(),
-                ]);
-            }
-        }
-
-        return $currentPoint;
+        return CarPoint::create($this->data);
     }
 }

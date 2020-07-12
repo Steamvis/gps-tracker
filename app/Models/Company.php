@@ -36,7 +36,15 @@ class Company extends Model
 
     public function getConnectedCarsCounterAttribute()
     {
-        return CarPoint::all()->filter(fn($car) => $car->created_at->diffInMinutes() < 5)->count();
+        $cars = Car::whereCompanyId($this->attributes['id'])
+            ->get()
+            ->filter(fn($car) => !empty($car->points));
+
+        return $cars->filter(function ($car) {
+            $point = $car->points->last();
+
+            return $point !== null ? $point->created_at->diffInMinutes() < 5 : null;
+        })->count();
     }
 
     public function getDisconnectedCarsCounterAttribute()

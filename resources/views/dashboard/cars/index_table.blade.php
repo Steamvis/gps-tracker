@@ -1,6 +1,7 @@
 <tbody>
 @foreach($cars as $car)
-    <tr data-car-id="{{ $car->id }}" style="cursor: pointer">
+    <tr class="@if($car->is_connected_map) bg-success  @else bg-danger @endif text-white"
+        data-car-id="{{ $car->id }}" style="cursor: pointer">
         <td class="text-center">
             <img src="{{ $car->image }}" alt="car-image" width="150px" height="100px">
         </td>

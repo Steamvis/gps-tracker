@@ -10,17 +10,22 @@ class AddCompaniesForeignKeys extends Migration
     {
 //        Schema::table('companies', function (Blueprint $table) {
 //            $table
-//                ->foreign('id')
-//                ->references('company_id')
-//                ->on('cars')
-//                ->onDelete('cascade');
+//                ->foreign('')
+//                ->references('')
+//                ->on('')
+//                ->onDelete('');
 //        });
     }
 
     public function down()
     {
-//        Schema::table('companies', function (Blueprint $table) {
-//            $table->dropForeign('companies_id_foreign');
-//        });
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropUnique([
+                'companies_owner_id_unique'
+            ]);
+            $table->dropIndex([
+                'companies_owner_id_unique'
+            ]);
+        });
     }
 }

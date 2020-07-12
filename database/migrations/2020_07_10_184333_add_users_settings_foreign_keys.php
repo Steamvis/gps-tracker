@@ -21,15 +21,20 @@ class AddUsersSettingsForeignKeys extends Migration
                     ->references('id')
                     ->on('settings')
                     ->onDelete('cascade');
-
             });
     }
 
     public function down()
     {
-        Schema::table('users_settings',
-            function (Blueprint $table) {
-                //
-            });
+        Schema::table('users_settings', function (Blueprint $table) {
+            $table->dropIndex([
+                'users_settings_setting_id_foreign',
+                'users_settings_user_id_foreign'
+            ]);
+            $table->dropForeign([
+                'users_settings_setting_id_foreign',
+                'users_settings_user_id_foreign'
+            ]);
+        });
     }
 }

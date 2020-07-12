@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Helpers\UserSettingsHelper;
+
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\User\UserSettings;
 use App\Services\Users\Settings\UpdateSettings;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 

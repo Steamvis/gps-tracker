@@ -14,26 +14,18 @@ class AddCarsRouteSectionsForeignKeys extends Migration
                 ->references('id')
                 ->on('cars_routes')
                 ->onDelete('cascade');
-
-//            $table
-//                ->foreign('id')
-//                ->references('section_id')
-//                ->on('cars_points')
-//                ->onDelete('cascade');
-
-//            $table
-//                ->foreign('end_point_id')
-//                ->references('id')
-//                ->on('cars_points')
-//                ->onDelete('cascade');
         });
     }
 
     public function down()
     {
         Schema::table('cars_route_sections', function (Blueprint $table) {
-            $table->dropForeign('cars_route_sections_start_point_foreign');
-            $table->dropForeign('cars_route_sections_end_point_foreign');
+            $table->dropIndex([
+                'cars_route_sections_route_id_foreign',
+            ]);
+            $table->dropForeign([
+                'cars_route_sections_route_id_foreign',
+            ]);
         });
     }
 }

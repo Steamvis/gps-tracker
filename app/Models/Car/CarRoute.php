@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CarRoute extends Model
 {
-    protected $table = 'cars_routes';
+    public $timestamps = false;
 
     public $fillable = [
         'name',
@@ -18,6 +18,8 @@ class CarRoute extends Model
         'end_time'
     ];
 
+    protected $table = 'cars_routes';
+
     public function getRouteNameAttribute(): string
     {
         // TODO
@@ -25,15 +27,23 @@ class CarRoute extends Model
 
     public function getMovingTimeAttribute(): string
     {
-        $format    = 'Y-m-d H:i';
+        $format = 'Y-m-d H:i';
         $startTime = Carbon::parse($this->attributes['start_time'])->format($format);
-        $endTime   = Carbon::parse($this->attributes['end_time'])->format($format);
+        $endTime = Carbon::parse($this->attributes['end_time'])->format($format);
 
         return "{$startTime} - {$endTime}";
     }
 
     public function getStartAttribute(): object
     {
+        if ($this->sections->isEmpty()) {
+            $point = $this->points[0];
+            return (object)[
+                'latitude'  => $point->latitude,
+                'longitude' => $point->longitude
+            ];
+        }
+
         $point = $this->sections->first()->points->first();
         return (object)[
             'latitude'  => $point->latitude,
@@ -43,6 +53,14 @@ class CarRoute extends Model
 
     public function getEndAttribute(): object
     {
+        if ($this->sections->isEmpty()) {
+            $point = $this->points[0];
+            return (object)[
+                'latitude'  => $point->latitude,
+                'longitude' => $point->longitude
+            ];
+        }
+
         $point = $this->sections->last()->points->last();
         return (object)[
             'latitude'  => $point->latitude,

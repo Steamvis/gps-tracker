@@ -20,7 +20,17 @@ class AddUsersForeignKeys extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign('users_company_id_foreign');
+            $table->dropUnique([
+                'users_company_id_unique',
+                'users_email_unique'
+            ]);
+            $table->dropForeign([
+                'users_company_id_foreign'
+            ]);
+            $table->dropIndex([
+                'users_company_id_unique',
+                'users_email_unique'
+            ]);
         });
     }
 }

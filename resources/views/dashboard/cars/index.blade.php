@@ -3,18 +3,17 @@
 @section('content')
     <div class="mb-3">
         <div class="d-flex justify-content-between">
-            <div
-                class="bg-info text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+            <div class="bg-info text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
                 {{ auth()->user()->company->cars_counter }}
                 <span>{{ __('dashboard.cars.cars') }}</span>
             </div>
             <div
-                class="bg-danger text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+                    class="bg-danger text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
                 {{ $company->disconnected_cars_counter }}
                 <span>{{ __('dashboard.cars.disconnected') }}</span>
             </div>
             <div
-                class="bg-success text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
+                    class="bg-success text-white text-center py-3 rounded-0 d-flex flex-column w-100 text-uppercase _hover-item">
                 {{ $company->connected_cars_counter }}
                 <span>{{ __('dashboard.cars.connected') }}</span>
             </div>
@@ -24,9 +23,9 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">
             <form
-                id="delete-many-objects-form"
-                method="POST"
-                action="{{ action('Cars\CarsController@destroyMany', [
+                    id="delete-many-objects-form"
+                    method="POST"
+                    action="{{ action('Cars\CarsController@destroyMany', [
                                 'locale' => app()->getLocale(),
                         ]) }}">
                 @csrf
@@ -76,7 +75,7 @@
                                        @else
                                        value="{{ old('search') }}"
                                        placeholder="{{ __('dashboard.general.search') }}"
-                                    @endisset>
+                                        @endisset>
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit">
                                         <i class="fas fa-search fa-sm"></i>

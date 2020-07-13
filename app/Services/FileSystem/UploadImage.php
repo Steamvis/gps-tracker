@@ -19,6 +19,6 @@ class UploadImage extends AbstractBaseService
 
         $directory = 'uploads' . DIRECTORY_SEPARATOR . 'company_' . auth()->user()->id;
 
-        return $data[0]->store($directory, 'public');
+        return $data['image']->store($directory, 'public');
     }
 }

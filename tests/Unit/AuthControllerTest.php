@@ -17,6 +17,6 @@ class AuthControllerTest extends TestCase
 
     public function testExample()
     {
-        $this->assertFalse(1 != 1);
+        // TODO
     }
 }

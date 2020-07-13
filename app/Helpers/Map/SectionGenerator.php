@@ -21,7 +21,8 @@ class SectionGenerator
         $this->endPoint = $endPoint;
 
         if ($this->isStartPointIDGreaterEndPointID()) {
-            throw new MapPointException('', 'Starting point cannot be greater than ending point');
+            $this->startPoint = $this->endPoint;
+            $this->endPoint = $this->startPoint;
         }
 
         if ($this->isPointsHasOneRoute() && $this->isPointsHasOneCar()) {

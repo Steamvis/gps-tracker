@@ -1,10 +1,12 @@
 <?php
 
+
 use App\Models\Company;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\Carbon;
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 $factory->define(Company::class, function (Faker $faker) {
     return [
         'country_id'    => $faker->randomNumber(),

@@ -38,6 +38,7 @@ class CreatePoint extends AbstractBaseService
         $this->data = $data;
 
         $route = CarRoute::whereCarId($this->data['car_id'])->get()->last();
+
         $this->data['route_id'] = $route->id;
 
         $this->validate($this->data);

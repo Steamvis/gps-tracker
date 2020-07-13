@@ -2,65 +2,44 @@
 
 namespace App\Helpers\Map;
 
+use App\DTO\MapDTO;
 use App\Helpers\CarHelper;
-use App\Models\Car\Car;
 use App\Models\Car\CarRoute;
 use App\Services\Map\Points\CreatePoint;
 use App\Services\Map\Routes\CreateRoute;
-use Illuminate\Http\Request;
 
 class RouteGenerator
 {
-    protected array  $data = [];
-    protected object $routeActions;
-
     private CarRoute $route;
 
-    public function __construct(Request $request)
+    public function generate(MapDTO $DTO): void
     {
-        [$apiCode, $carID] = explode('_', $request->carInfo);
-
-        $this->data = [
-            'car_id'    => $carID,
-            'api_code'  => $apiCode,
-            'latitude'  => $request->latitude,
-            'longitude' => $request->longitude
-        ];
-
-        $this->routeActions = (object)[
-            'startRoute' => $request->start_route ? true : false,
-            'endRoute'   => $request->end_route ? true : false
-        ];
-    }
-
-    public function generate(): void
-    {
-        $car = Car::whereId($this->data['car_id'])->first();
-
-        if ($this->isStartRoute()) {
+        if ($this->isStartRoute($DTO)) {
             $this->route = app(CreateRoute::class)->execute([
                 'name'       => 'test',
-                'car_id'     => $car->id,
+                'car_id'     => $DTO->getCar()->id,
                 'start_time' => now()
             ]);
         }
 
-        app(CreatePoint::class)->execute($this->data);
+        app(CreatePoint::class)->execute([
+            'car_id'    => $DTO->getCar()->id,
+            'api_code'  => $DTO->getApiCode(),
+            'latitude'  => $DTO->getLatitude(),
+            'longitude' => $DTO->getLongitude(),
+        ]);
 
-        $points = CarHelper::getLatestCarPoints($car);
+        $points = CarHelper::getLatestCarPoints($DTO->getCar());
         $startPoint = $points[0];
 
         if ($points->count() > 1) {
             $endPoint = $points[1];
 
-
-
             app(SectionGenerator::class)->generate($startPoint, $endPoint);
         }
 
-
-        if ($this->isEndRoute()) {
-            $this->route = CarHelper::getLastRoute($car);
+        if ($this->isEndRoute($DTO)) {
+            $this->route = CarHelper::getLastRoute($DTO->getCar());
             $this->endRoute();
         }
     }
@@ -70,13 +49,13 @@ class RouteGenerator
         $this->route->update(['end_time' => now()]);
     }
 
-    private function isStartRoute(): bool
+    private function isStartRoute(MapDTO $DTO): bool
     {
-        return $this->routeActions->startRoute && !$this->routeActions->endRoute;
+        return $DTO->isStartRoute() && !$DTO->isEndRoute();
     }
 
-    private function isEndRoute(): bool
+    private function isEndRoute(MapDTO $DTO): bool
     {
-        return !$this->routeActions->startRoute && $this->routeActions->endRoute;
+        return !$DTO->isStartRoute() && $DTO->isEndRoute();
     }
 }

@@ -28,8 +28,7 @@ class CarsController extends Controller
                     ->orWhere('gov_number', 'LIKE', "%{$search}%")
                     ->orWhere('api_code', 'LIKE', "%{$search}%")
                     ->orWhere('year', $search)
-                    ->orWhereIn(
-                        'mark_id',
+                    ->orWhereIn('mark_id',
                         fn($query) => $query->select('id')->from('car_marks')->where('name', 'LIKE', "%{$search}%")
                     );
             })->paginate(auth()->user()->settings->where('setting_id', 2)->first()->value);
@@ -50,19 +49,17 @@ class CarsController extends Controller
 
     public function store(Request $request)
     {
-        app(CreateCar::class)->execute(
-            [
-                'name'        => $request->name,
-                'color'       => $request->color,
-                'company_id'  => auth()->user()->company->id,
-                'vin_number'  => $request->vin_number,
-                'gov_number'  => $request->gov_number,
-                'description' => $request->description,
-                'year'        => $request->year,
-                'mark_id'     => !$request->mark_id ? 1 : $request->mark_id,
-                'image'       => $request->image,
-            ]
-        );
+        app(CreateCar::class)->execute([
+            'name'        => $request->name,
+            'color'       => $request->color,
+            'company_id'  => auth()->user()->company->id,
+            'vin_number'  => $request->vin_number,
+            'gov_number'  => $request->gov_number,
+            'description' => $request->description,
+            'year'        => $request->year,
+            'mark_id'     => !$request->mark_id ? 1 : $request->mark_id,
+            'image'       => $request->image,
+        ]);
 
         Alert::success(__('dashboard.general.result.success'), __('dashboard.cars.result.create'));
 
@@ -114,20 +111,18 @@ class CarsController extends Controller
 
     public function update(Request $request, string $locale, Car $car)
     {
-        $result = app(UpdateCar::class)->execute(
-            [
-                'id'          => $car->id,
-                'name'        => $request->name,
-                'color'       => $request->color,
-                'company_id'  => auth()->user()->company->id,
-                'vin_number'  => $request->vin_number,
-                'gov_number'  => $request->gov_number,
-                'description' => $request->description,
-                'year'        => $request->year,
-                'mark_id'     => !$request->mark_id ? 1 : $request->mark_id,
-                'image'       => $request->image,
-            ]
-        );
+        $result = app(UpdateCar::class)->execute([
+            'id'          => $car->id,
+            'name'        => $request->name,
+            'color'       => $request->color,
+            'company_id'  => auth()->user()->company->id,
+            'vin_number'  => $request->vin_number,
+            'gov_number'  => $request->gov_number,
+            'description' => $request->description,
+            'year'        => $request->year,
+            'mark_id'     => !$request->mark_id ? 1 : $request->mark_id,
+            'image'       => $request->image,
+        ]);
 
         $result
             ? Alert::success(__('dashboard.general.result.success'), __('dashboard.general.result.update'))

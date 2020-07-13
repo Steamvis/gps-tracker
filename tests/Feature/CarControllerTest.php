@@ -61,7 +61,7 @@ class CarControllerTest extends TestCase
             'mark_id' => 2,
             'image'   => new UploadedFile(
                 resource_path('images/company/register_bg.jpg'),
-                'register_bg.jpf',
+                'register_bg.jpg',
                 'image/jpeg',
                 null,
                 true

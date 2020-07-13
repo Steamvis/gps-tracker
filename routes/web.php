@@ -40,6 +40,8 @@ Route::group([
         'cars' => 'Cars\CarsController',
     ]);
     Route::delete('cars', 'Cars\CarsController@destroyMany')->name('cars.destroy.many');
+
+    Route::post('image', 'Image\ImagesController@upload')->name('images.upload');
     Route::delete('image', 'Image\ImagesController@destroy')->name('images.destroy');
 });
 

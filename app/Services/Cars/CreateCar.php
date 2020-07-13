@@ -28,8 +28,11 @@ class CreateCar extends AbstractBaseService
     {
         $user = auth()->user();
 
+
         if (isset($data['image'])) {
-            $data['image_path'] = app(UploadImage::class)->execute([$data['image']]);
+            $data['image_path'] = app(UploadImage::class)->execute([
+                'image' => $data['image']
+            ]);
         }
 
         $this->validate($data);

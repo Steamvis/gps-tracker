@@ -2,17 +2,32 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTO\MapDTO;
 use App\Helpers\Map\RouteGenerator;
 use App\Http\Controllers\Controller;
+use App\Models\Car\Car;
 use Illuminate\Http\Request;
 
 class MapController extends Controller
 {
     public function routeGenerator(Request $request)
     {
-        $routeGenerator = new RouteGenerator($request);
+        [$apiCode, $carID] = explode('_', $request->carInfo);
 
-        $routeGenerator->generate();
+        $isStartRoute = $request->start_route ? true : false;
+        $isEndRoute = $request->end_route ? true : false;
+        $car = Car::find($carID);
+
+        $routeGenerator = new RouteGenerator();
+
+        $routeGenerator->generate(new MapDTO(
+            $car,
+            $apiCode,
+            $request->latitude,
+            $request->longitude,
+            $isStartRoute,
+            $isEndRoute
+        ));
 
         return response()->json()->getStatusCode();
     }

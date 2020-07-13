@@ -6,6 +6,7 @@ return [
         'unknown' => 'Неизвестный',
         'search'  => 'Поиск',
         'back'    => 'Назад',
+        'settings'=> 'Настройки',
         'CRUD'    => [
             'create' => 'Создать',
             'delete' => 'Удалить',

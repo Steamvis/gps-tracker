@@ -47,7 +47,7 @@
             </div>
             <div class="modal-body">{{ __('auth.logout ready') }}</div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">{{ __('general.cancel') }}</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">{{ __('dashboard.general.forms.cancel') }}</button>
                 <form action="{{ route('logout', app()->getLocale()) }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-primary">{{ __('auth.logout') }}</button>

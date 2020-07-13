@@ -18,6 +18,7 @@ return [
     'remember me'                         => 'Запомнить меня',
     'forgot password'                     => 'Забыли пароль?',
     'login'                               => 'Войти',
+    'logout'                              => 'Выйти',
     'reset password'                      => 'Восстановить пароль',
     'send password link'                  => 'Отправить ссылку на восстановление пароля',
     'click here to request another'       => 'Нажмите здесь, чтобы запросить другой пароль',

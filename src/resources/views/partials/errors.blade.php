@@ -1,4 +1,4 @@
-@if (isset($errors))a
+@if (isset($errors))
     @if (count($errors) > 0)
         <div class="alert alert-danger mt-3">
             <ul>

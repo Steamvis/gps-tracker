@@ -35,7 +35,7 @@
                         onclick="return callConfirmModal(this)"
                         data-title="{{ __('dashboard.general.forms.confirm') }}"
                         data-cancel="{{ __('dashboard.general.forms.cancel') }}"
-                        data-confirm="{{ __('dashboard.general.forms.ok') }}">
+                        data-confirm="{{ __('dashboard.general.forms.yes') }}">
                     <span class="text">{{ __('dashboard.general.CRUD.delete') }} {{ __('dashboard.cars.cars') }}</span>
                 </button>
             </form>

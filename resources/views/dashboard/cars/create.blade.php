@@ -37,7 +37,7 @@
                                 <img width="200px" style="object-fit: cover;" src="{{ $car->image }}">
                                 <span data-title="{{ __('dashboard.general.forms.confirm') }}"
                                       data-cancel="{{ __('dashboard.general.forms.cancel') }}"
-                                      data-confirm="{{ __('dashboard.general.forms.ok') }}"
+                                      data-confirm="{{ __('dashboard.general.forms.yes') }}"
                                       data-token="{{ csrf_token() }}"
                                       data-car="{{ $car->id }}"
                                       action="{{ route('images.destroy', [

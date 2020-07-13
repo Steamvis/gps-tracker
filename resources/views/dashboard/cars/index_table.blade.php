@@ -32,7 +32,7 @@
                                 onclick="callConfirmModal(this)"
                                 data-title="{{ __('dashboard.general.forms.confirm') }}"
                                 data-cancel="{{ __('dashboard.general.forms.cancel') }}"
-                                data-confirm="{{ __('dashboard.general.forms.ok') }}"
+                                data-confirm="{{ __('dashboard.general.forms.yes') }}"
                                 class="dropdown-item" style="font-size: 14px">
                             {{ __('dashboard.general.CRUD.delete') }}
                         </button>

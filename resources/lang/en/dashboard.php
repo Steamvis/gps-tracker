@@ -34,28 +34,19 @@ return [
     ],
     ///////////////////////////////////////////////
     'statistics' => [
-        'transportations' => 'Transportation',
-        'staff' => 'Staff',
-        'tasks' => 'Tasks',
         'about car' => 'About car',
-        'next service' => 'Next service',
-        'car income' => 'Car income',
     ],
     ///////////////////////////////////////////////
     'cars' => [
         'cars' => 'Cars',
-        'car' => 'car',
+        'car' => 'Car',
         'all cars' => 'All cars',
-        'moving' => 'Moving',
-        'parking' => 'Parking',
         'connected' => 'Connected',
         'disconnected' => 'Disconnected',
         'table' => [
             'image' => 'Image',
             'name' => 'Name',
             'brand_name' => 'Brand',
-            'driver' => 'Driver',
-            'manager' => 'Manager',
             'year' => 'Year',
             'vin_number' => 'VIN Code',
             'gov_number' => 'Car number',
@@ -71,9 +62,6 @@ return [
     ],
     'company' => [
         'register company' => 'Register company',
-        'table' => [
-            'name',
-        ],
     ],
     ///////////////////////////////////////////////
     'navigation' => [

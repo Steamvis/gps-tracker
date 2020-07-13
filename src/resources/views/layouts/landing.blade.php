@@ -10,11 +10,6 @@
 <body>
 @include('navigation.landing_navigation')
 
-@if($errors->any())
-    @dd($errors)
-@endif
-
-
 <header class="masthead">
     <div class="container vertical-center">
         <div class="row w-100">

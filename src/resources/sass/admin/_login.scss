@@ -1,23 +1,23 @@
 // Pulling these images from Unsplash
 // Toshi the dog from https://unsplash.com/@charlesdeluvio - what a funny dog...
 
-.bg-login-image {
-  background: url($login-image);
-  background-position: center;
-  background-size: cover;
-}
+//.bg-login-image {
+//  background: url($login-image);
+//  background-position: center;
+//  background-size: cover;
+//}
 
 .bg-register-image {
-  background: url($register-image);
+  background: url('public/images/company/register_bg.jpg');
   background-position: center;
   background-size: cover;
 }
-
-.bg-password-image {
-  background: url($password-image);
-  background-position: center;
-  background-size: cover;
-}
+//
+//.bg-password-image {
+//  background: url($password-image);
+//  background-position: center;
+//  background-size: cover;
+//}
 
 form.user {
 

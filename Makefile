@@ -1,4 +1,4 @@
-init: build up composer-install set-storage-link clear-cache dump-autoload migrate npm-prod queue-on
+init: build up composer-install set-storage-link clear-cache dump-autoload copy-env migrate npm-prod queue-on
 
 build:
 	docker-compose build
@@ -10,7 +10,7 @@ down:
 	docker-compose down
 
 composer-install:
-	docker-compose run --rm --no-deps php-fpm composer install --no-dev
+	docker-compose run --rm --no-deps php-fpm composer install
 
 set-storage-link:
 	docker-compose run --rm --no-deps php-fpm chmod -R 777 storage/
@@ -32,7 +32,9 @@ clear-logs:
 	docker-compose run --rm --no-deps php-fpm rm -rf storage/logs/laravel.log
 
 npm-prod:
+	docker-compose run --rm --no-deps node npm install --save-dev webpack
 	docker-compose run --rm --no-deps node npm run prod
 
 copy-env:
 	cp env-laravel src/.env
+	docker-compose run --rm --no-deps php-fpm php artisan key:generate

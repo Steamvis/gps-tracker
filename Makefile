@@ -10,7 +10,7 @@ down:
 	docker-compose down
 
 composer-install:
-	docker-compose run --rm --no-deps php-fpm composer install
+	docker-compose run --rm --no-deps php-fpm composer install --no-dev
 
 set-storage-link:
 	docker-compose run --rm --no-deps php-fpm chmod -R 777 storage/

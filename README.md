@@ -1,4 +1,11 @@
-test
+# How to install
+in project folder
+```text
+make init
+```
 
-storage chmod
-storage link
+need
+```text
+mailtrap
+yandex map api
+```

@@ -4,39 +4,47 @@
 version: "3.1"
 services:
 
-    redis:
-      image: redis:alpine
-      container_name: src-redis
+  redis:
+    image: redis:alpine
+    container_name: src-redis
 
-    mysql:
-      image: mysql:8.0
-      container_name: src-mysql
-      working_dir: /application
-      volumes:
-        - ./src:/application
-      environment:
-        - MYSQL_ROOT_PASSWORD=root
-        - MYSQL_DATABASE=lcrm
-        - MYSQL_USER=default
-        - MYSQL_PASSWORD=default
-      ports:
-        - "8082:3306"
+  mysql:
+    image: mysql:5.7
+    container_name: src-mysql
+    working_dir: /application
+    volumes:
+      - ./src:/application
+    environment:
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=lcrm
+      - MYSQL_USER=default
+      - MYSQL_PASSWORD=default
+    ports:
+      - "8082:3306"
 
-    webserver:
-      image: nginx:alpine
-      container_name: src-webserver
-      working_dir: /application
-      volumes:
-          - ./src:/application
-          - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      ports:
-       - "8080:80"
+  webserver:
+    image: nginx:alpine
+    container_name: src-webserver
+    working_dir: /application
+    volumes:
+      - ./src:/application
+      - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8080:80"
 
-    php-fpm:
-      build: phpdocker/php-fpm
-      container_name: src-php-fpm
-      working_dir: /application
-      volumes:
-        - ./src:/application
-        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+  php-fpm:
+    build: phpdocker/php-fpm
+    container_name: src-php-fpm
+    working_dir: /application
+    volumes:
+      - ./src:/application
+      - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
 
+  node:
+    image: node:14.5.0-slim
+    container_name: src-node
+    working_dir: /application
+    tty: true
+    volumes:
+      - ./src:/application

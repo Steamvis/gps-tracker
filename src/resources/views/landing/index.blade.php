@@ -7,7 +7,7 @@
             <h2 class="text-white-50 mx-auto mt-2 mb-5">
                 A free, responsive, one page Bootstrap theme created by Start Bootstrap.
             </h2>
-            <a class="btn btn-secondary btn-lg" href="#about">Get Started</a>
+            <a class="btn btn-secondary btn-lg" href="{{ route('login', app()->getLocale()) }}">Get Started</a>
         </div>
     </div>
 @endsection

@@ -1,4 +1,4 @@
-init: build up set-storage-link clear-cache dump-autoload migrate npm-prod queue-on
+init: build up composer-install set-storage-link clear-cache dump-autoload migrate npm-prod queue-on
 
 build:
 	docker-compose build
@@ -9,19 +9,17 @@ up:
 down:
 	docker-compose down
 
-enter-mysql:
-	docker-compose exec mysql mysql -uroot -proot
+composer-install:
+	docker-compose run --rm --no-deps php-fpm composer install
 
 set-storage-link:
 	docker-compose run --rm --no-deps php-fpm chmod -R 777 storage/
-	rm src/public/storage
 	docker-compose exec php-fpm php artisan storage:link
 
 queue-on:
 	docker-compose exec php-fpm php artisan queue:work
 
 migrate:
-	sleep 5
 	docker-compose exec php-fpm php artisan migrate:fresh --seed
 
 clear-cache:
@@ -36,3 +34,5 @@ clear-logs:
 npm-prod:
 	docker-compose run --rm --no-deps node npm run prod
 
+copy-env:
+	cp env-laravel src/.env

@@ -16,7 +16,7 @@ API_CODE - generated when creating a car, where the first 10 letters are the cod
 
 START -  boolean value 1 or 0. if you want create route write 1
 
-END - Boolean value 1 or 0. if you want end route write 1
+END - Boolean value 1 or 0. If you want to end the route, write 1
 
 ------
 

@@ -6,6 +6,7 @@ make init
 
 need
 ```text
-mailtrap
+https://mailtrap.io/
+
 yandex map api
 ```

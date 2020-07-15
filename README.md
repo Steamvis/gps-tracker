@@ -2,7 +2,6 @@
 in project folder
 ```text
 make init
-make install
 ```
 
 need
@@ -10,4 +9,10 @@ need
 https://mailtrap.io/
 
 yandex map api
+```
+
+
+Clear docker containers
+```text
+docker container rm src-
 ```

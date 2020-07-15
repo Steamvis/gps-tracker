@@ -6,3 +6,4 @@
 ./landing
 ./vendor
 ./storage
+./mix-manifest.json

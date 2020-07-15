@@ -2,6 +2,7 @@
 in project folder
 ```text
 make init
+make install
 ```
 
 need

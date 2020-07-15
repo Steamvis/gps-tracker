@@ -1,4 +1,4 @@
-init: build up composer-install set-storage-link clear-cache dump-autoload copy-env migrate npm-prod queue-on
+init: build up composer-install-prestissimo composer-install-app set-storage-link clear-cache dump-autoload copy-env migrate npm-prod queue-on
 
 build:
 	docker-compose build
@@ -9,18 +9,33 @@ up:
 down:
 	docker-compose down
 
-composer-install:
-	docker-compose run --rm --no-deps php-fpm composer install
+composer-install-prestissimo:
+	mv src/composer.json runtime/composer.json
+	mv src/composer.lock runtime/composer.lock
+	cp sources/composer.json src/composer.json
+	echo -e "\e[1minstall composer booster\e[0m"
+	docker-compose run --rm --no-deps php-fpm composer require hirak/prestissimo
+	rm src/composer.lock
+	mv runtime/composer.json src/composer.json
+	mv runtime/composer.lock src/composer.lock
+	echo -e "\e[1;37;42minstall composer booster...............................done\e[0m"
+
+composer-install-app:
+	echo -e "\e[1minstall laravel app\e[0m"
+	docker-compose run --rm --no-deps php-fpm composer update --no-progress --profile --prefer-dist
+	echo -e "\e[1;37;42minstall laravel app...............................done\e[0m"
 
 set-storage-link:
 	docker-compose run --rm --no-deps php-fpm chmod -R 777 storage/
-	docker-compose exec php-fpm php artisan storage:link
+	docker-compose run --rm --no-deps php-fpm php artisan storage:link
 
 queue-on:
-	docker-compose exec php-fpm php artisan queue:work
+	echo -e "\e[1;37;42mready to use\e[0m"
+	echo -e "\e[1mdocs: https://github.com/Steamvis/laravel-crm/tree/master/docs\e[0m"
+	docker-compose run --rm --no-deps php-fpm php artisan queue:work
 
 migrate:
-	docker-compose exec php-fpm php artisan migrate:fresh --seed
+	docker-compose run --rm --no-deps php-fpm php artisan migrate:fresh --seed
 
 clear-cache:
 	docker-compose run --rm --no-deps php-fpm php artisan cache:clear
@@ -36,5 +51,5 @@ npm-prod:
 	docker-compose run --rm --no-deps node npm run prod
 
 copy-env:
-	cp env-laravel src/.env
+	cp sources/env-laravel src/.env
 	docker-compose run --rm --no-deps php-fpm php artisan key:generate

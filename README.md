@@ -7,12 +7,5 @@ make init
 need
 ```text
 https://mailtrap.io/
-
 yandex map api
-```
-
-
-Clear docker containers
-```text
-docker container rm src-
 ```

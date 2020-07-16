@@ -24,7 +24,7 @@ class UpdateCar extends AbstractBaseService
 
         $car = Car::findOrFail($data['id']);
 
-        if (CarHelper::checkUserOwnsCar($car)) {
+        if (CarHelper::checkAuthUserOwnsCar($car)) {
             $data['vin_number'] = $data['vin_number'] === __('dashboard.general.unknown') ? '' : $data['vin_number'];
 
             if (isset($data['image'])) {

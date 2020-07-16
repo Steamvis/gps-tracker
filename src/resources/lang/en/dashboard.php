@@ -2,34 +2,35 @@
 
 return [
     ///////////////////////////////////////////////
-    'general' => [
-        'unknown' => 'Unknown',
-        'search' => 'Search',
-        'back' => 'Back',
-        'CRUD' => [
+    'general'    => [
+        'unknown'  => 'Unknown',
+        'search'   => 'Search',
+        'back'     => 'Back',
+        'settings' => 'settings',
+        'CRUD'     => [
             'create' => 'Create',
             'delete' => 'Delete',
-            'edit' => 'Edit',
-            'view' => 'Show',
+            'edit'   => 'Edit',
+            'view'   => 'Show',
         ],
-        'forms' => [
-            'submit' => 'Submit',
-            'choose file' => 'Choose file',
-            'confirm' => 'Are you sure?',
-            'yes' => 'Yes',
-            'select all' => 'Check all',
-            'unselect all' => 'Uncheck all',
-            'select year' => 'Select year',
-            'select brand' => 'Select brand',
+        'forms'    => [
+            'submit'         => 'Submit',
+            'choose file'    => 'Choose file',
+            'confirm'        => 'Are you sure?',
+            'yes'            => 'Yes',
+            'select all'     => 'Check all',
+            'unselect all'   => 'Uncheck all',
+            'select year'    => 'Select year',
+            'select brand'   => 'Select brand',
             'select country' => 'Select country',
-            'actions' => 'Actions',
-            'of' => 'Of',
-            'cancel' => 'cancel',
+            'actions'        => 'Actions',
+            'of'             => 'Of',
+            'cancel'         => 'cancel',
         ],
-        'result' => [
+        'result'   => [
             'success' => 'Successfully',
-            'error' => 'Error',
-            'update' => 'Update',
+            'error'   => 'Error',
+            'update'  => 'Update',
         ],
     ],
     ///////////////////////////////////////////////
@@ -37,30 +38,30 @@ return [
         'about car' => 'About car',
     ],
     ///////////////////////////////////////////////
-    'cars' => [
-        'cars' => 'Cars',
-        'car' => 'Car',
-        'all cars' => 'All cars',
-        'connected' => 'Connected',
+    'cars'       => [
+        'cars'         => 'Cars',
+        'car'          => 'Car',
+        'all cars'     => 'All cars',
+        'connected'    => 'Connected',
         'disconnected' => 'Disconnected',
-        'table' => [
-            'image' => 'Image',
-            'name' => 'Name',
-            'brand_name' => 'Brand',
-            'year' => 'Year',
-            'vin_number' => 'VIN Code',
-            'gov_number' => 'Car number',
-            'location' => 'Location',
+        'table'        => [
+            'image'       => 'Image',
+            'name'        => 'Name',
+            'brand_name'  => 'Brand',
+            'year'        => 'Year',
+            'vin_number'  => 'VIN Code',
+            'gov_number'  => 'Car number',
+            'location'    => 'Location',
             'description' => 'Description',
-            'color' => 'Color',
-            'api_key' => 'API key',
+            'color'       => 'Color',
+            'api_key'     => 'API key',
         ],
-        'result' => [
+        'result'       => [
             'create' => 'Created a transport',
             'delete' => 'Deleted a transport',
         ],
     ],
-    'company' => [
+    'company'    => [
         'register company' => 'Register company',
     ],
     ///////////////////////////////////////////////
@@ -69,12 +70,12 @@ return [
         'cars' => 'Cars',
     ],
     ///////////////////////////////////////////////
-    'map' => [
-        'routes' => 'Routes',
-        'start route' => 'Start of route',
-        'end route' => 'End of route',
-        'km' => 'km',
-        'current route' => 'Current',
+    'map'        => [
+        'routes'          => 'Routes',
+        'start route'     => 'Start of route',
+        'end route'       => 'End of route',
+        'km'              => 'km',
+        'current route'   => 'Current',
         'time on the way' => 'Time on the way',
     ],
     ///////////////////////////////////////////////

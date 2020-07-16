@@ -25,7 +25,7 @@ class DestroyCars extends AbstractBaseService
         foreach ($data['action'] as $id) {
             $car = Car::find($id);
 
-            if (!CarHelper::checkUserOwnsCar($car)) {
+            if (!CarHelper::checkAuthUserOwnsCar($car)) {
                 return false;
             }
 

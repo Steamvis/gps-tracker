@@ -20,7 +20,7 @@ class DestroyCar extends AbstractBaseService
     {
         $car = Car::find($data['id']);
 
-        if (CarHelper::checkUserOwnsCar($car)) {
+        if (CarHelper::checkAuthUserOwnsCar($car)) {
             $this->validate($data);
 
             $car->delete();

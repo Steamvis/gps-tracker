@@ -15,8 +15,8 @@ class AuthControllerTest extends TestCase
     ];
 
 
-    public function testExample()
-    {
-        // TODO
-    }
+//    public function testExample()
+//    {
+//         TODO
+//    }
 }

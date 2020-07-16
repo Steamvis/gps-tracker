@@ -18,16 +18,16 @@ class MapController extends Controller
         $isEndRoute = $request->end_route ? true : false;
         $car = Car::find($carID);
 
-        $routeGenerator = new RouteGenerator();
-
-        $routeGenerator->generate(new MapDTO(
-            $car,
-            $apiCode,
-            $request->latitude,
-            $request->longitude,
-            $isStartRoute,
-            $isEndRoute
-        ));
+        app(RouteGenerator::class)->generate(
+            new MapDTO(
+                $car,
+                $apiCode,
+                $request->latitude,
+                $request->longitude,
+                $isStartRoute,
+                $isEndRoute
+            )
+        );
 
         return response()->json()->getStatusCode();
     }

@@ -14,7 +14,7 @@ class CarHelper
         return CarPoint::whereCarId($car->id)->latest()->limit(2)->get()->reverse()->values();
     }
 
-    public static function checkUserOwnsCar(Car $car): bool
+    public static function checkAuthUserOwnsCar(Car $car): bool
     {
         return $car->company_id === auth()->user()->company_id;
     }

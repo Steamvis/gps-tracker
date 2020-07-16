@@ -68,7 +68,7 @@ class CarsController extends Controller
 
     public function show(string $locale, Car $car)
     {
-        if (CarHelper::checkUserOwnsCar($car)) {
+        if (CarHelper::checkAuthUserOwnsCar($car)) {
             return view('dashboard.cars.show', compact('car'));
         }
         return abort(404);
@@ -103,7 +103,7 @@ class CarsController extends Controller
 
     public function edit(string $locale, Car $car)
     {
-        if (CarHelper::checkUserOwnsCar($car)) {
+        if (CarHelper::checkAuthUserOwnsCar($car)) {
             return $this->create()->with('car', $car);
         }
         return abort(404);

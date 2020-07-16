@@ -2,9 +2,9 @@
 
 - [About](#About)
 - [Requirements](#Requirements)
-- [Getting Started](#Getting Started)
+- [Getting-Started](#Getting Started)
 - [Docs](https://github.com/Steamvis/laravel-crm/tree/master/docs)
-- [Clean docker](#Clean Docker)
+- [Clean-docker](#Clean Docker)
 
 # About
 

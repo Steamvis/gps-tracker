@@ -8,7 +8,8 @@
         <div class="map-header-menu">
             <h2 id="__car_name"></h2>
             <button class="btn btn-light" type="button"
-                    data-target="drawAllCars"
+                    style="position: absolute; top: 0.5rem; right: 12rem;"
+                    data-target="drawAllCars">
                 {{ __('dashboard.cars.all cars') }}
             </button>
             <button class="btn btn-light dropdown-toggle" type="button"

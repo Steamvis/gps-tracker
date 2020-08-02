@@ -1,15 +1,13 @@
 # Table of contents
 
-- [About](#About)
+- [About Project](#About-Project)
 - [Requirements](#Requirements)
-- [Getting-Started](#Getting-Started)
+- [Getting Started](#Getting-Started)
 - [Docs](https://github.com/Steamvis/laravel-crm/tree/master/docs)
-- [Clean-Docker](#Clean-Docker)
+- [Clean Docker](#Clean-Docker)
 
-# About
-
-Dashboard with map GPS Tracking.
-
+# About Project
+Dashboard with map GPS Tracking
 ```text
 demo user
 login: demo@demo.demo
@@ -18,27 +16,9 @@ password: demo
 
 <img src="https://user-images.githubusercontent.com/20637799/87759387-e846a100-c816-11ea-999a-3d0450b00366.png">
 
-![map second](https://user-images.githubusercontent.com/20637799/87759493-12985e80-c817-11ea-83d8-7390531a743e.gif)
-
-At system are being built routes and calculated data
-
-- time in moving,
-- time a moving on segment,
-- distance between segments
-- route distance
-
-Geo-points are added through [API](https://github.com/Steamvis/laravel-crm/blob/master/src/app/Http/Controllers/Api/MapController.php) ([docs](https://github.com/Steamvis/laravel-crm/blob/master/docs/api.md)). 
-
-You can create routes, adds points, end routes
-
-![map-api](https://user-images.githubusercontent.com/20637799/87759499-14fab880-c817-11ea-98f0-830fd26c9533.gif)
-
-In dashboard you can create/edit transport, upload photo, watch connected/disconnected transport
-
-![second](https://user-images.githubusercontent.com/20637799/87759508-16c47c00-c817-11ea-8b2d-027e33c4da3a.gif)
+[see more](ABOUT.md)
 
 # Requirements
-
 ```text
 Docker
 Make - https://en.wikipedia.org/wiki/Make_(software) / https://habr.com/ru/post/211751/
@@ -49,23 +29,20 @@ Make - https://en.wikipedia.org/wiki/Make_(software) / https://habr.com/ru/post/
 # Getting Started 
 
 1. Download project
-
    ```bash
    git clone git@github.com:Steamvis/laravel-crm.git PATH
    ```
 
-2. in project folder :open_file_folder: ​run the command from the command line, which will install the project in a Docker container using a [Makefile](https://github.com/Steamvis/laravel-crm/blob/master/Makefile)
-
+2. in project folder :open_file_folder: ​run the command from the command line, which will install the project in a Docker container using a [Makefile](Makefile)
    ```bash
    make init
    ```
 
-   installation ~3-6 min* :coffee:
+   installation ~15-20 min* :coffee:
 
 3. Edit env file and add [yandex-map-api code](https://developer.tech.yandex.ru/services/) :earth_americas:
 
 4. enable queue
-
    ```bash
    make queue-on
    ```

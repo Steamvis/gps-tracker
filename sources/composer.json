@@ -1,8 +1,0 @@
-{
-    "name": "laravel/laravel",
-    "license": "MIT",
-    "require": {
-        "php": "^7.4",
-        "hirak/prestissimo": "*"
-    }
-}

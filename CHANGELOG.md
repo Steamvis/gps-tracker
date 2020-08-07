@@ -13,6 +13,10 @@
 ### Added  
 
 - About.md
+
+### Other  
+
+- Clean up project
  
 ---
 

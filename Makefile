@@ -1,66 +1,77 @@
-# VARIABLES
+# TABLE OF CONTENTS
 #
-# FOLDERS
+# MAKEFILE VARIABLES
+#	FOLDERS
+#	FILES
+# DOCKER
+#	INSTALLATION
+#	CONTROLLING
+#		BACKEND
+#		FRONTEND
+#	NODE JS
+#	DATABASE
+#	LOGS/CACHE
+#	QUEUE
 
-RUNTIME = ./runtime
+
+################################################################
+###################### MAKE VARIABLES ##########################
+################################################################
+######################### FOLDERS ##############################
+################################################################
+
 SRC = ./src
-SOURCES = ./sources
-NODE_MODULES = $(SRC)/node_modules
+ENVIRONMENT = ./environment
+RUNTIME = $(ENVIRONMENT)/runtime
 
-# FILES
+BACKEND = $(SRC)/backend
+FRONTEND = $(SRC)/frontend
+
+BACKEND_NODE_MODULES = $(FRONTEND)/node_modules
+
+################################################################
+########################### FILES ##############################
+################################################################
 
 COMPOSER.JSON = composer.json
 COMPOSER.LOCK = composer.lock
 
+################################################################
+########################## DOCKER ##############################
+################################################################
+####################### INSTALLATION ###########################
+################################################################
 
-init: build up composer-install-prestissimo composer-install-app set-storage-link clear-cache dump-autoload copy-env migrate npm-install npm-prod
+init: build up composer-install-app set-storage-link clear-cache dump-autoload copy-env migrate npm-install npm-prod success-install
 
 build:
 	docker-compose build
 
-up:
-	docker-compose up -d
-
-down:
-	docker-compose down
-
-queue-on: clear-cache
-	docker exec -it src-php-fpm php artisan queue:work
-
-composer-install-prestissimo:
-	if [ -d $(RUNTIME) ]; then rm -rf $(RUNTIME); fi
-	mkdir runtime
-	if [ -f $(SRC)/$(COMPOSER.JSON) ]; then mv $(SRC)/$(COMPOSER.JSON) $(RUNTIME)/$(COMPOSER.JSON); fi
-	if [ -f $(SRC)/$(COMPOSER.LOCK) ]; then mv $(SRC)/$(COMPOSER.LOCK) $(RUNTIME)/$(COMPOSER.LOCK); fi
-	cp $(SOURCES)/$(COMPOSER.JSON) $(SRC)/$(COMPOSER.JSON)
-	echo -e "\e[1minstall composer booster\e[0m"
-	docker-compose run --rm --no-deps php-fpm composer require hirak/prestissimo
-	if [ -f "./src/composer.lock" ]; then rm -f src/composer.lock; fi
-	if [ -f $(RUNTIME)/$(COMPOSER.JSON) ]; then mv $(RUNTIME)/$(COMPOSER.JSON) $(SRC)/$(COMPOSER.JSON); fi
-	if [ -f $(RUNTIME)/$(COMPOSER.LOCK) ]; then mv $(RUNTIME)/$(COMPOSER.LOCK) $(SRC)/$(COMPOSER.LOCK); fi
-	echo -e "\e[1;37;42minstall composer booster...............................done\e[0m"
-
 composer-install-app:
 	echo -e "\e[1minstall laravel app\e[0m"
-	docker-compose run --rm --no-deps php-fpm composer install --no-progress --profile --prefer-dist
+	docker-compose run --rm --no-deps php-cli composer install --no-progress --profile --prefer-dist
 	echo -e "\e[1;37;42minstall laravel app...............................done\e[0m"
 
 set-storage-link:
-	docker-compose run --rm --no-deps php-fpm chmod -R 777 storage/
-	docker-compose run --rm --no-deps php-fpm php artisan storage:link
+	docker-compose run --rm --no-deps php-cli chmod -R 777 storage/
+	docker-compose run --rm --no-deps php-cli php artisan storage:link
 
-migrate:
-	docker-compose run --rm --no-deps php-fpm php artisan migrate:fresh --seed
+copy-env:
+	if [ -f $(BACKEND)/.env ]; then mv $(BACKEND)/.env $(RUNTIME)/.env; fi
+	cp $(ENVIRONMENT)/env-laravel $(BACKEND)/.env
+	docker-compose run --rm --no-deps php-cli php artisan key:generate
 
-npm-install:
-	if [ -d $(NODE_MODULES) ]; then docker-compose run --rm --no-deps node rm -rf $(NODE_MODULES); fi
-	docker-compose run --rm --no-deps node npm i
-
-npm-prod:
-	docker-compose run --rm --no-deps node npm run prod
+success-install:
+	clear
 	echo -e "\e[1;37;42mready to use\e[0m"
 	#
-	# site: http://localhost:8080/
+	# add to hosts file
+	#
+	# 127.0.0.1 api.lcrm.test
+ 	# 127.0.0.1 lcrm.test
+	#
+	# site: http://lcrm.test/
+	# api:	http://api.lcrm.test/
 	#
 	#
 	# docs: https://github.com/Steamvis/laravel-crm/tree/master/docs
@@ -69,16 +80,80 @@ npm-prod:
 	# enable queue write
 	# make queue-on
 
-copy-env:
-	if [ -f $(SRC)/.env ]; then mv $(SRC)/.env $(RUNTIME)/.env; fi
-	cp $(SOURCES)/env-laravel $(SRC)/.env
-	docker-compose run --rm --no-deps php-fpm php artisan key:generate
+################################################################
+################### DOCKER CONTROLLING #########################
+################################################################
+
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down
+
+################################################################
+################### CONTROLLING BACKEND ########################
+################################################################
+
+php:
+	docker-compose run --rm --no-deps php-cli
+
+php-bash:
+	docker-compose run --rm --no-deps php-cli bash
+
+################################################################
+################## CONTROLLING FRONTEND ########################
+################################################################
+
+node:
+	docker-compose exec node bash
+
+################################################################
+######################### NODE JS ##############################
+################################################################
+
+npm-install:
+	if [ -d $(BACKEND_NODE_MODULES) ]; then docker-compose run --rm --no-deps node rm -rf $(BACKEND_NODE_MODULES); fi
+	docker-compose run --rm --no-deps node npm i
+
+npm-prod:
+	docker-compose run --rm --no-deps node npm run prod
+
+################################################################
+######################## DATABASE ##############################
+################################################################
+
+migrate:
+	docker-compose run --rm --no-deps php-cli php artisan migrate:fresh --seed
+
+################################################################
+####################### LOGS/CACHE #############################
+################################################################
+
+logs-docker:
+	docker-compose logs
 
 clear-logs:
-	docker-compose run --rm --no-deps php-fpm rm -rf storage/logs/laravel.log
+	docker-compose run --rm --no-deps php-cli rm -rf storage/logs/laravel.log
 
 clear-cache:
-	docker-compose run --rm --no-deps php-fpm php artisan cache:clear
+	docker-compose run --rm --no-deps php-cli php artisan cache:clear
 
 dump-autoload:
-	docker-compose run --rm --no-deps php-fpm composer dump-autoload
+	docker-compose run --rm --no-deps php-cli composer dump-autoload
+
+################################################################
+########################## QUEUE ###############################
+################################################################
+
+queue-on: clear-cache
+	docker exec -it src-php-fpm php artisan queue:work
+
+################################################################
+########################## OTHER ###############################
+################################################################
+
+chown:
+	sudo chown -R $(USER) src/
+
+routes:
+	docker-compose run --rm --no-deps php-cli php artisan route:list

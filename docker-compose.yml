@@ -1,19 +1,71 @@
-###############################################################################
-#                          Generated on phpdocker.io                          #
-###############################################################################
-version: "3.1"
+version: "3.3"
+
 services:
+  gateway:
+    container_name: gateway
+    build:
+      context: docker/gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+
+  ############################################
+  backend:
+    container_name: backend
+    build:
+      context: docker/backend/nginx
+    volumes:
+      - ./src/backend:/backend
+    depends_on:
+      - php-fpm
+      - php-cli
+
+  php-fpm:
+    container_name: backend-php-fpm
+    build:
+      context: docker/backend/php-fpm
+    volumes:
+      - ./src/backend:/backend
+
+  php-cli:
+    container_name: backend-php-cli
+    build:
+      context: docker/backend/php-cli
+    volumes:
+      - ./src/backend:/backend
+
+  #############################################
+
+  frontend:
+    container_name: frontend
+    build:
+      context: docker/frontend/nginx
+    volumes:
+      - ./src/frontend:/frontend
+    depends_on:
+      - node
+
+  node:
+    container_name: frontend-node
+    build:
+      context: docker/frontend/node
+    volumes:
+      - ./src/backend:/frontend
+#      - ./src/frontend:/frontend
+    tty: true
+  #############################################
 
   redis:
     image: redis:alpine
-    container_name: src-redis
+    container_name: redis
+    ports:
+      - "6379:6379"
 
   mysql:
     image: mysql:5.7
-    container_name: src-mysql
-    working_dir: /application
-    volumes:
-      - ./src:/application
+    container_name: mysql
     environment:
       - MYSQL_ROOT_USER=root
       - MYSQL_ROOT_PASSWORD=root
@@ -23,28 +75,3 @@ services:
     ports:
       - "8082:3306"
 
-  webserver:
-    image: nginx:alpine
-    container_name: src-webserver
-    working_dir: /application
-    volumes:
-      - ./src:/application
-      - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - "8080:80"
-
-  php-fpm:
-    build: phpdocker/php-fpm
-    container_name: src-php-fpm
-    working_dir: /application
-    volumes:
-      - ./src:/application
-      - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
-
-  node:
-    image: node:14.5.0-slim
-    container_name: src-node
-    working_dir: /application
-    tty: true
-    volumes:
-      - ./src:/application

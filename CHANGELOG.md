@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.0.2-BETA.A 2020-08-08
+
+### Added
+
+- Car observer
+- Form requests
+ 
+### Update
+
+- Refactoring route generator
 
 ## 0.0.2-BETA 2020-08-07
 

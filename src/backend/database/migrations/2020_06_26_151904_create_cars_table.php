@@ -20,6 +20,7 @@ class CreateCarsTable extends Migration
             $table->string('gov_number')->nullable();
             $table->string('description')->nullable();
             $table->string('image_path')->nullable();
+            $table->timestamps();
             $table->softDeletes();
         });
     }

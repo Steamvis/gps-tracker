@@ -4,6 +4,7 @@ namespace App\Models\Car;
 
 use App\Models\Company;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -14,8 +15,6 @@ use Illuminate\Support\Str;
 class Car extends Model
 {
     use SoftDeletes;
-
-    public $timestamps = false;
 
     protected $fillable = [
         'mark_id',
@@ -32,10 +31,29 @@ class Car extends Model
 
     public $casts = ['year' => 'integer'];
 
-    public function getMovingTimeAttribute()
+    public function scopeLastPoints(Builder $query, Car $car)
     {
-        $lastRoute = $this->routes->last();
-        $interval = Carbon::parse($lastRoute->end_time)->diffAsCarbonInterval(Carbon::parse($lastRoute->start_time));
+        $points = $query->where('id', $car->id)->firstOrFail()
+            ->points()
+            ->latest()
+            ->limit(2)
+            ->get();
+
+        // reverse points
+        [$points[0], $points[1]] = [$points[1], $points[0]];
+
+        return $points;
+    }
+
+    public function getLastRouteAttribute(): CarRoute
+    {
+        return $this->routes->last();
+    }
+
+    public function getMovingTimeAttribute(): string
+    {
+        $route = $this->last_route;
+        $interval = Carbon::parse($route->end_time)->diffAsCarbonInterval(Carbon::parse($route->start_time));
         return $interval->locale(app()->getLocale())->forHumans();
     }
 

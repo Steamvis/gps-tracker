@@ -30,7 +30,6 @@ class Company extends Model
         $company->cars_counter = $company->cars->count();
         $company->save();
 
-
         Cache::set('company_cars_counter' . $company->id, $company->cars_counter);
     }
 

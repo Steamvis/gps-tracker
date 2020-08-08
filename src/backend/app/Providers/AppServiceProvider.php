@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Car\Car;
+use App\Observers\CarObserver;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(Request $request)
     {
+        Car::observe(CarObserver::class);
+
         // ngrok support
         // ngrok http -host-header=rewrite site.dev:80
         // normalizes url

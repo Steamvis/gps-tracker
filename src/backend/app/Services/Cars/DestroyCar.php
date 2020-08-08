@@ -25,8 +25,6 @@ class DestroyCar extends AbstractBaseService
 
             $car->delete();
 
-            Company::updateCarsCounter(auth()->user()->company);
-
             return true;
         }
 

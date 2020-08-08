@@ -19,8 +19,6 @@ class DestroyCars extends AbstractBaseService
             if (!CarHelper::checkAuthUserOwnsCar($car)) {
                 return false;
             }
-
-            Company::updateCarsCounter(auth()->user()->company);
         }
 
         return Car::destroy($data['action']);

@@ -24,8 +24,6 @@ class CreateCar extends AbstractBaseService
 
         $car = Car::create($data);
 
-        Company::updateCarsCounter($car->company);
-
         return Car::find($car->id);
     }
 }

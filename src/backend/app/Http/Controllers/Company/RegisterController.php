@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCompanyRequest;
 use App\Models\Company;
 use App\Models\Country;
 use App\Services\Company\CreateCompany;
@@ -21,7 +22,7 @@ class RegisterController extends Controller
         return view('dashboard.company.register', compact('countries'));
     }
 
-    public function register(Request $request)
+    public function register(StoreCompanyRequest $request)
     {
         app(CreateCompany::class)->execute([
             'owner_id'   => auth()->user()->id,

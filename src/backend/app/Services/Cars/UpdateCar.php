@@ -11,13 +11,6 @@ use App\Services\FileSystem\UploadImage;
 
 class UpdateCar extends AbstractBaseService
 {
-    public function rules(): array
-    {
-        return array_merge(app(CreateCar::class)->rules(), [
-            'id' => 'integer|exists:cars,id'
-        ]);
-    }
-
     public function execute(array $data): bool
     {
         $user = auth()->user();
@@ -33,7 +26,6 @@ class UpdateCar extends AbstractBaseService
                 ]);
             }
 
-            $this->validate($data);
             $car->update($data);
 
             return true;

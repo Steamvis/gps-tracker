@@ -36,6 +36,8 @@ Route::group([
     Route::patch('profile/settings', 'Users\SettingsController@update')->name('user.profile.settings.update');
 
     Route::get('/', 'DashboardController@index')->name('dashboard.index');
+
+    // cars
     Route::resources([
         'cars' => 'Cars\CarsController',
     ]);

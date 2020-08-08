@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Cars;
 
 use App\Helpers\CarHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DestroyCarsRequest;
+use App\Http\Requests\StoreCarRequest;
 use App\Models\Car\Car;
 use App\Models\Country;
 use App\Services\Cars\CreateCar;
@@ -17,6 +19,7 @@ class CarsController extends Controller
 {
     public function index(Request $request)
     {
+        $paginatePages = auth()->user()->settings->where('setting_id', 2)->first()->value;
         $cars = Car::with('brand', 'points')->whereCompanyId(auth()->user()->company_id);
 
         if ($request->has('search')) {
@@ -31,13 +34,15 @@ class CarsController extends Controller
                     ->orWhereIn('mark_id',
                         fn($query) => $query->select('id')->from('car_marks')->where('name', 'LIKE', "%{$search}%")
                     );
-            })->paginate(auth()->user()->settings->where('setting_id', 2)->first()->value);
-
-            return view('dashboard.cars.index', compact('cars', 'search'));
+            });
         }
-        $cars = $cars->paginate(auth()->user()->settings->where('setting_id', 2)->first()->value);
 
-        return view('dashboard.cars.index', compact('cars'));
+        $cars = $cars->paginate($paginatePages);
+
+        return view('dashboard.cars.index', [
+            'cars'   => $cars,
+            'search' => $search ?? ''
+        ]);
     }
 
     public function create()
@@ -47,7 +52,7 @@ class CarsController extends Controller
         return view('dashboard.cars.create', compact('countries'));
     }
 
-    public function store(Request $request)
+    public function store(StoreCarRequest $request)
     {
         app(CreateCar::class)->execute([
             'name'        => $request->name,
@@ -87,7 +92,7 @@ class CarsController extends Controller
         return redirect()->back();
     }
 
-    public function destroyMany(Request $request)
+    public function destroyMany(DestroyCarsRequest $request)
     {
         $result = app(DestroyCars::class)->execute([
             'action' => $request->action,
@@ -109,7 +114,7 @@ class CarsController extends Controller
         return abort(404);
     }
 
-    public function update(Request $request, string $locale, Car $car)
+    public function update(StoreCarRequest $request, string $locale, Car $car)
     {
         $result = app(UpdateCar::class)->execute([
             'id'          => $car->id,

@@ -42,27 +42,11 @@ class MapDTO
     }
 
     /**
-     * @param Car $car
-     */
-    public function setCar(Car $car): void
-    {
-        $this->car = $car;
-    }
-
-    /**
      * @return string
      */
     public function getApiCode(): string
     {
         return $this->apiCode;
-    }
-
-    /**
-     * @param string $apiCode
-     */
-    public function setApiCode(string $apiCode): void
-    {
-        $this->apiCode = $apiCode;
     }
 
     /**
@@ -106,26 +90,10 @@ class MapDTO
     }
 
     /**
-     * @param bool $isStartRoute
-     */
-    public function setIsStartRoute(bool $isStartRoute): void
-    {
-        $this->isStartRoute = $isStartRoute;
-    }
-
-    /**
      * @return bool
      */
     public function isEndRoute(): bool
     {
         return $this->isEndRoute;
-    }
-
-    /**
-     * @param bool $isEndRoute
-     */
-    public function setIsEndRoute(bool $isEndRoute): void
-    {
-        $this->isEndRoute = $isEndRoute;
     }
 }

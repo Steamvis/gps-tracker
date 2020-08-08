@@ -2,7 +2,6 @@
 
 namespace App\Helpers\Map;
 
-use App\Exceptions\MapPointException;
 use App\Models\Car\CarPoint;
 use App\Models\Car\CarRouteSection;
 use App\Models\Car\PointsSection;

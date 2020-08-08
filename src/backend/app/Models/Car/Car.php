@@ -40,7 +40,9 @@ class Car extends Model
             ->get();
 
         // reverse points
-        [$points[0], $points[1]] = [$points[1], $points[0]];
+        if ($points->count() > 2) {
+            [$points[0], $points[1]] = [$points[1], $points[0]];
+        }
 
         return $points;
     }

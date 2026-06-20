@@ -1,8 +1,34 @@
-// Package serverinfo is the application service exposing database server
-// metadata. Task 2 declares only the Service type so the HTTP Deps struct
-// compiles; the Info type, Repository port, New and Get arrive in Task 4,
-// which replaces this file.
+// Package serverinfo is the application service for the server-info endpoint:
+// it exposes a Repository port and a Service that fetches database/server facts.
 package serverinfo
 
-// Service serves server metadata. Fields and methods are added in Task 4.
-type Service struct{}
+import (
+	"context"
+	"time"
+)
+
+// Info is the server/database fact returned to callers.
+type Info struct {
+	Time    time.Time
+	PostGIS string
+}
+
+// Repository is the driven port the Service depends on.
+type Repository interface {
+	ServerInfo(ctx context.Context) (Info, error)
+}
+
+// Service orchestrates the server-info use case.
+type Service struct {
+	repo Repository
+}
+
+// New builds a Service backed by repo.
+func New(repo Repository) *Service {
+	return &Service{repo: repo}
+}
+
+// Get returns the current server Info from the repository.
+func (s *Service) Get(ctx context.Context) (Info, error) {
+	return s.repo.ServerInfo(ctx)
+}

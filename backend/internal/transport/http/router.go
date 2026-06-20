@@ -42,6 +42,7 @@ func NewRouter(d Deps) http.Handler {
 
 	r.Get("/healthz", healthz)
 	r.Get("/readyz", NewReadyHandler(d.Ready))
+	r.Get("/api/v1/server-info", serverInfoHandler(d.ServerInfo, d.Version, d.Log))
 
 	return r
 }

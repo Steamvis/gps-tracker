@@ -1,6 +1,6 @@
-// Command api serves the gps-api HTTP transport. In milestone M0 Task 3 it
-// exposes GET /healthz and GET /readyz, runs migrations on boot and connects to
-// Postgres; server-info wiring follows in Task 4 and OTel in Task 5.
+// Command api serves the gps-api HTTP transport. In milestone M0 Task 4 it
+// serves the full end-to-end /api/v1/server-info slice; OTel wiring follows in
+// Task 5 and the -health subcommand in Task 6.
 package main
 
 import (
@@ -13,6 +13,7 @@ import (
 	"github.com/Steamvis/gps-tracker/backend/internal/platform/config"
 	platformlog "github.com/Steamvis/gps-tracker/backend/internal/platform/log"
 	transporthttp "github.com/Steamvis/gps-tracker/backend/internal/transport/http"
+	"github.com/Steamvis/gps-tracker/backend/internal/usecase/serverinfo"
 )
 
 func main() {
@@ -27,7 +28,6 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	// Migrations run on boot; the api container does this per the compose contract.
 	if err := postgres.Migrate(ctx, cfg); err != nil {
 		logger.Error("migrate failed", "error", err)
 		os.Exit(1)
@@ -40,13 +40,15 @@ func main() {
 	}
 	defer db.Close()
 
+	srvInfo := serverinfo.New(db)
+
 	router := transporthttp.NewRouter(transporthttp.Deps{
-		Log:     logger,
-		Version: cfg.Version,
+		Log:        logger,
+		ServerInfo: srvInfo,
+		Version:    cfg.Version,
 		Ready: []transporthttp.ReadyCheck{
 			{Name: "postgres", Check: db.Ping},
 		},
-		// ServerInfo is wired in Task 4.
 	})
 
 	server := transporthttp.NewServer(cfg.HTTPAddr, router, logger)

@@ -7,8 +7,7 @@ package sqlcgen
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 const serverInfo = `-- name: ServerInfo :one
@@ -16,7 +15,7 @@ SELECT now()::timestamptz AS now, postgis_version() AS postgis_version
 `
 
 type ServerInfoRow struct {
-	Now            pgtype.Timestamptz
+	Now            time.Time
 	PostgisVersion interface{}
 }
 

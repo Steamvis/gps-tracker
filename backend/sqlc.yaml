@@ -11,3 +11,6 @@ sql:
         emit_interface: false
         emit_json_tags: false
         emit_empty_slices: true
+        overrides:
+          - db_type: "timestamptz"
+            go_type: "time.Time"

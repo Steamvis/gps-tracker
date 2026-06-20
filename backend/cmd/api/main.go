@@ -1,6 +1,6 @@
-// Command api serves the gps-api HTTP transport. In milestone M0 Task 4 it
-// serves the full end-to-end /api/v1/server-info slice; OTel wiring follows in
-// Task 5 and the -health subcommand in Task 6.
+// Command api serves the gps-api HTTP transport. Milestone M0 Task 5 adds OTel
+// (traces, metrics, logs) wired before logging; the -health subcommand is added
+// in Task 6.
 package main
 
 import (
@@ -8,10 +8,12 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/Steamvis/gps-tracker/backend/internal/adapter/postgres"
 	"github.com/Steamvis/gps-tracker/backend/internal/platform/config"
 	platformlog "github.com/Steamvis/gps-tracker/backend/internal/platform/log"
+	platformotel "github.com/Steamvis/gps-tracker/backend/internal/platform/otel"
 	transporthttp "github.com/Steamvis/gps-tracker/backend/internal/transport/http"
 	"github.com/Steamvis/gps-tracker/backend/internal/usecase/serverinfo"
 )
@@ -23,10 +25,23 @@ func main() {
 		os.Exit(1)
 	}
 
-	logger := platformlog.New(cfg)
-
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+
+	// Install global OTel providers before building the logger, so the otelslog
+	// bridge handler resolves the LoggerProvider configured here.
+	otelShutdown, err := platformotel.Setup(ctx, cfg)
+	if err != nil {
+		println("otel setup failed:", err.Error())
+		os.Exit(1)
+	}
+	defer func() {
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		_ = otelShutdown(shutdownCtx)
+	}()
+
+	logger := platformlog.New(cfg)
 
 	if err := postgres.Migrate(ctx, cfg); err != nil {
 		logger.Error("migrate failed", "error", err)

@@ -8,21 +8,18 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 
 	"github.com/Steamvis/gps-tracker/backend/internal/usecase/serverinfo"
 )
 
-// ReadyCheck is a named readiness dependency. It is consumed by /readyz, which
-// is wired in Task 3; the type is declared here (once) so Deps matches the
-// frozen contract.
+// ReadyCheck is a named readiness dependency.
 type ReadyCheck struct {
 	Name  string
 	Check func(context.Context) error
 }
 
-// Deps holds everything the router needs. In Task 2 only Log and Version are
-// used; ServerInfo may be nil and Ready may be nil until Tasks 4 and 3.
+// Deps holds everything the router needs to serve its endpoints.
 type Deps struct {
 	Log        *slog.Logger
 	ServerInfo *serverinfo.Service
@@ -30,19 +27,20 @@ type Deps struct {
 	Version    string
 }
 
-// NewRouter builds the chi router with the standard middleware and the
-// currently-available routes. Task 2 mounts only GET /healthz; /readyz and
-// /api/v1/server-info are added in Tasks 3 and 4, and the full middleware
-// chain is completed in Task 5.
+// NewRouter builds the chi router, mounts the three endpoints and wraps the
+// whole handler in the contract middleware chain (outer->inner):
+// requestID -> recoverer -> accessLog -> otelhttp("gps-api").
 func NewRouter(d Deps) http.Handler {
 	r := chi.NewRouter()
-
-	r.Use(middleware.RequestID)
-	r.Use(middleware.Recoverer)
 
 	r.Get("/healthz", healthz)
 	r.Get("/readyz", NewReadyHandler(d.Ready))
 	r.Get("/api/v1/server-info", serverInfoHandler(d.ServerInfo, d.Version, d.Log))
 
-	return r
+	var h http.Handler = r
+	h = otelhttp.NewHandler(h, "gps-api")
+	h = accessLog(d.Log)(h)
+	h = recoverer(d.Log)(h)
+	h = requestID(h)
+	return h
 }

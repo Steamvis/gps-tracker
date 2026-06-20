@@ -11,12 +11,12 @@ import (
 )
 
 const serverInfo = `-- name: ServerInfo :one
-SELECT now()::timestamptz AS now, postgis_version() AS postgis_version
+SELECT now()::timestamptz AS now, postgis_version()::text AS postgis_version
 `
 
 type ServerInfoRow struct {
 	Now            time.Time
-	PostgisVersion interface{}
+	PostgisVersion string
 }
 
 func (q *Queries) ServerInfo(ctx context.Context) (ServerInfoRow, error) {

@@ -62,8 +62,8 @@ func TestPostgres_MigrateAndServerInfo(t *testing.T) {
 	if err != nil {
 		t.Fatalf("server info: %v", err)
 	}
-	if info.PostgisVersion == nil {
-		t.Fatalf("PostgisVersion is nil, want a version string")
+	if info.PostgisVersion == "" {
+		t.Fatalf("PostgisVersion is empty, want a version string")
 	}
 	if info.Now.IsZero() {
 		t.Fatalf("Now is zero, want a non-zero timestamp")

@@ -41,6 +41,7 @@ func NewRouter(d Deps) http.Handler {
 	r.Use(middleware.Recoverer)
 
 	r.Get("/healthz", healthz)
+	r.Get("/readyz", NewReadyHandler(d.Ready))
 
 	return r
 }

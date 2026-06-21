@@ -3,6 +3,7 @@ package log
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"os"
 
@@ -13,12 +14,18 @@ import (
 
 // New returns a slog.Logger that writes JSON to stdout and, in parallel, feeds
 // every record to the OTel log bridge (exported via the global LoggerProvider
-// configured by otel.Setup). The level is taken from cfg.LogLevel.
+// configured by otel.Setup). The level is taken from cfg.LogLevel. Every line
+// carries the service, version and env so the stdout stream is filterable on
+// its own, matching the resource attributes on the OTLP pipeline.
 func New(cfg config.Config) *slog.Logger {
 	level := parseLevel(cfg.LogLevel)
 	jsonHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: level})
 	otelHandler := otelslog.NewHandler(cfg.ServiceName)
-	return slog.New(newFanout(jsonHandler, otelHandler))
+	return slog.New(newFanout(jsonHandler, otelHandler)).With(
+		slog.String("service", cfg.ServiceName),
+		slog.String("version", cfg.Version),
+		slog.String("env", cfg.Env),
+	)
 }
 
 func parseLevel(s string) slog.Level {
@@ -52,15 +59,16 @@ func (f *fanout) Enabled(ctx context.Context, level slog.Level) bool {
 }
 
 func (f *fanout) Handle(ctx context.Context, r slog.Record) error {
+	var errs []error
 	for _, h := range f.handlers {
 		if !h.Enabled(ctx, r.Level) {
 			continue
 		}
 		if err := h.Handle(ctx, r.Clone()); err != nil {
-			return err
+			errs = append(errs, err)
 		}
 	}
-	return nil
+	return errors.Join(errs...)
 }
 
 func (f *fanout) WithAttrs(attrs []slog.Attr) slog.Handler {

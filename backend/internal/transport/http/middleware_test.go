@@ -91,6 +91,45 @@ func TestAccessLogRunsAndPassesThrough(t *testing.T) {
 	}
 }
 
+// capturingHandler records the attributes of the last slog record so a test
+// can assert on what accessLog logged.
+type capturingHandler struct {
+	attrs map[string]slog.Value
+}
+
+func (c *capturingHandler) Enabled(context.Context, slog.Level) bool { return true }
+func (c *capturingHandler) Handle(_ context.Context, r slog.Record) error {
+	c.attrs = make(map[string]slog.Value)
+	r.Attrs(func(a slog.Attr) bool {
+		c.attrs[a.Key] = a.Value
+		return true
+	})
+	return nil
+}
+func (c *capturingHandler) WithAttrs([]slog.Attr) slog.Handler { return c }
+func (c *capturingHandler) WithGroup(string) slog.Handler      { return c }
+
+func TestAccessLogCapturesImplicit200(t *testing.T) {
+	cap := &capturingHandler{}
+	// Handler writes a body without ever calling WriteHeader; net/http sends a
+	// 200 implicitly and accessLog must record 200, not 0.
+	h := accessLog(slog.New(cap))(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, _ = w.Write([]byte("ok"))
+	}))
+
+	rec := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/healthz", nil)
+	h.ServeHTTP(rec, req)
+
+	got, ok := cap.attrs["status"]
+	if !ok {
+		t.Fatalf("access log did not record a status attribute")
+	}
+	if got.Int64() != http.StatusOK {
+		t.Fatalf("expected logged status 200 for implicit write, got %d", got.Int64())
+	}
+}
+
 func TestOtelHTTPRecordsSpan(t *testing.T) {
 	sr := tracetest.NewSpanRecorder()
 	tp := sdktrace.NewTracerProvider(sdktrace.WithSpanProcessor(sr))

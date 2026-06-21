@@ -71,18 +71,33 @@ func (s *statusRecorder) WriteHeader(code int) {
 	s.ResponseWriter.WriteHeader(code)
 }
 
+// Write records an implicit 200 when a handler writes a body without calling
+// WriteHeader first, mirroring net/http's own behaviour so the access log
+// never reports a 0 status.
+func (s *statusRecorder) Write(b []byte) (int, error) {
+	if s.status == 0 {
+		s.status = http.StatusOK
+	}
+	return s.ResponseWriter.Write(b)
+}
+
 // accessLog logs method, path, status, duration and request_id for every
 // request via slog.
 func accessLog(log *slog.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
-			rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
+			rec := &statusRecorder{ResponseWriter: w}
 			next.ServeHTTP(rec, r)
+			status := rec.status
+			if status == 0 {
+				// Handler returned without writing anything; net/http sends 200.
+				status = http.StatusOK
+			}
 			log.InfoContext(r.Context(), "http request",
 				slog.String("method", r.Method),
 				slog.String("path", r.URL.Path),
-				slog.Int("status", rec.status),
+				slog.Int("status", status),
 				slog.Duration("duration", time.Since(start)),
 				slog.String("request_id", requestIDFromContext(r.Context())),
 			)

@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -38,7 +39,10 @@ func main() {
 	defer func() {
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
-		_ = otelShutdown(shutdownCtx)
+		if err := otelShutdown(shutdownCtx); err != nil {
+			// The logger may already be torn down here, so report to stderr.
+			fmt.Fprintln(os.Stderr, "otel shutdown failed:", err)
+		}
 	}()
 
 	logger := platformlog.New(cfg)

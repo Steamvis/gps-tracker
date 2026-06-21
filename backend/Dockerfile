@@ -1,7 +1,10 @@
 # syntax=docker/dockerfile:1
 
 # ---- Stage 1: build a static, CGO-free binary ----
-FROM golang:1.22 AS build
+# Run the toolchain natively on the build host (BUILDPLATFORM) and cross-compile
+# to the requested target, so the same Dockerfile yields a correct binary on an
+# arm64 workstation and an amd64 CI runner alike.
+FROM --platform=$BUILDPLATFORM golang:1.22 AS build
 WORKDIR /src
 
 # Cache module downloads.
@@ -11,7 +14,10 @@ RUN go mod download
 # Build.
 COPY . .
 ARG VERSION=dev
-ENV CGO_ENABLED=0 GOOS=linux
+# TARGETOS/TARGETARCH are provided by BuildKit; default to linux/native when the
+# image is built without an explicit --platform.
+ARG TARGETOS=linux TARGETARCH
+ENV CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH}
 RUN go build -trimpath -ldflags="-s -w" -o /out/api ./cmd/api
 
 # ---- Stage 2: minimal distroless runtime ----

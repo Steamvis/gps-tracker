@@ -1,11 +1,12 @@
-// Command api serves the gps-api HTTP transport. Milestone M0 Task 5 adds OTel
-// (traces, metrics, logs) wired before logging; the -health subcommand is added
-// in Task 6.
+// Command api serves the gps-api HTTP transport. The -health subcommand
+// performs the in-container liveness probe used by the Docker HEALTHCHECK.
 package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -20,6 +21,16 @@ import (
 )
 
 func main() {
+	health := flag.Bool("health", false, "perform an HTTP health check against http://localhost:8080/healthz and exit")
+	flag.Parse()
+	if *health {
+		if err := healthCheck(); err != nil {
+			fmt.Fprintln(os.Stderr, "health check failed:", err)
+			os.Exit(1)
+		}
+		os.Exit(0)
+	}
+
 	cfg, err := config.Load()
 	if err != nil {
 		println("config load failed:", err.Error())
@@ -76,4 +87,20 @@ func main() {
 		logger.Error("server exited with error", "error", err)
 		os.Exit(1)
 	}
+}
+
+// healthCheck performs the in-container liveness probe used by the Docker
+// HEALTHCHECK and by docker-compose. It GETs the local /healthz endpoint and
+// returns nil only when the server answers HTTP 200.
+func healthCheck() error {
+	client := &http.Client{Timeout: 3 * time.Second}
+	resp, err := client.Get("http://localhost:8080/healthz")
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("healthz returned status %d", resp.StatusCode)
+	}
+	return nil
 }

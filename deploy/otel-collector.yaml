@@ -14,6 +14,22 @@ processors:
     check_interval: 1s
     limit_percentage: 80
     spike_limit_percentage: 20
+  # DEVIATION (see Task 10 report): the pinned otelhttp v0.56.0 in the Go backend
+  # emits only the LEGACY http metric "http.server.duration" (ms, label http.status_code)
+  # and never the stable "http.server.request.duration" (s, label http.response.status.code)
+  # that the brief's dashboard + smoke test query (its RecordMetrics hardcodes the old
+  # measures; "// TODO: Duplicate Metrics"). No SDK env opt-in can produce the stable
+  # metric in that version, so we normalise it here in the collector (infra-only fix):
+  # rename + ms->s rescale, and mirror the status-code label to the stable key.
+  transform/http_semconv:
+    metric_statements:
+      - context: metric
+        statements:
+          - scale_metric(0.001, "s") where name == "http.server.duration"
+          - set(name, "http.server.request.duration") where name == "http.server.duration"
+      - context: datapoint
+        statements:
+          - set(attributes["http.response.status.code"], attributes["http.status_code"]) where metric.name == "http.server.request.duration" and attributes["http.status_code"] != nil
 
 exporters:
   debug:
@@ -40,7 +56,7 @@ service:
       exporters: [otlp/tempo, debug]
     metrics:
       receivers: [otlp]
-      processors: [memory_limiter, batch]
+      processors: [memory_limiter, transform/http_semconv, batch]
       exporters: [prometheus, debug]
     logs:
       receivers: [otlp]

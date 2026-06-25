@@ -40,6 +40,10 @@ echo "==> Asserting the http metric exists in Prometheus"
 retry "prometheus has http_server_request_duration_seconds_count for gps-api" bash -c \
   'curl -s --get "http://localhost:9090/api/v1/query" --data-urlencode "query=http_server_request_duration_seconds_count{service_name=\"gps-api\"}" | grep -q "\"status\":\"success\"" && curl -s --get "http://localhost:9090/api/v1/query" --data-urlencode "query=http_server_request_duration_seconds_count{service_name=\"gps-api\"}" | grep -q "\"result\":\[{"'
 
+echo "==> Asserting logs reached Loki"
+retry "loki has gps-api logs" bash -c \
+  'curl -s --get "http://localhost:3100/loki/api/v1/query_range" --data-urlencode "query={service_name=\"gps-api\"}" --data-urlencode "limit=1" | grep -q "\"values\""'
+
 echo "==> Asserting Grafana is serving"
 retry "grafana returns HTTP 200" bash -c \
   '[ "$(curl -s -o /dev/null -w "%{http_code}" localhost:3000)" = "200" ]'

@@ -38,7 +38,13 @@ func NewRouter(d Deps) http.Handler {
 	r.Get("/api/v1/server-info", serverInfoHandler(d.ServerInfo, d.Version, d.Log))
 
 	var h http.Handler = r
-	h = otelhttp.NewHandler(h, "gps-api")
+	// otelhttp >=0.69 defaults the span name to the HTTP method; keep naming the
+	// server span after the operation ("gps-api") to preserve the span-name contract.
+	h = otelhttp.NewHandler(h, "gps-api",
+		otelhttp.WithSpanNameFormatter(func(operation string, _ *http.Request) string {
+			return operation
+		}),
+	)
 	h = accessLog(d.Log)(h)
 	h = recoverer(d.Log)(h)
 	h = requestID(h)

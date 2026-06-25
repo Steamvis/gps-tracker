@@ -138,7 +138,14 @@ func TestOtelHTTPRecordsSpan(t *testing.T) {
 	inner := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
-	h := otelhttp.NewHandler(inner, "gps-api", otelhttp.WithTracerProvider(tp))
+	h := otelhttp.NewHandler(inner, "gps-api",
+		otelhttp.WithTracerProvider(tp),
+		// Mirror router.go: keep the operation as the span name (otelhttp >=0.69
+		// otherwise defaults the span name to the HTTP method).
+		otelhttp.WithSpanNameFormatter(func(operation string, _ *http.Request) string {
+			return operation
+		}),
+	)
 
 	rec := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/healthz", nil)

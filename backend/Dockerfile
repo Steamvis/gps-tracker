@@ -3,8 +3,9 @@
 # ---- Stage 1: build a static, CGO-free binary ----
 # Run the toolchain natively on the build host (BUILDPLATFORM) and cross-compile
 # to the requested target, so the same Dockerfile yields a correct binary on an
-# arm64 workstation and an amd64 CI runner alike.
-FROM --platform=$BUILDPLATFORM golang:1.22 AS build
+# arm64 workstation and an amd64 CI runner alike. Pinned to a patched Go release
+# (Go 1.22 is EOL; its stdlib carries unfixable CVEs flagged by the image scan).
+FROM --platform=$BUILDPLATFORM golang:1.26.4 AS build
 WORKDIR /src
 
 # Cache module downloads.

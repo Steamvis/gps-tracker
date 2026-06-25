@@ -21,6 +21,16 @@ processors:
   # measures; "// TODO: Duplicate Metrics"). No SDK env opt-in can produce the stable
   # metric in that version, so we normalise it here in the collector (infra-only fix):
   # rename + ms->s rescale, and mirror the status-code label to the stable key.
+  #
+  # REMOVE this entire processor (and revert the metrics pipeline below to
+  # [memory_limiter, batch]) once the backend's otelhttp is upgraded past v0.56.0 to emit
+  # "http.server.request.duration" natively — otherwise the renamed legacy metric collides
+  # with the new native one (same name, mismatched attrs) and the p95/rate panels break.
+  #
+  # NOTE: only the metric name, unit, and status-code label are normalised to stable
+  # semconv; the remaining attributes (http_method, http_scheme, net_host_name, ...)
+  # intentionally stay legacy-semconv — sufficient for the dashboard contract, not a full
+  # semconv migration.
   transform/http_semconv:
     metric_statements:
       - context: metric
@@ -30,6 +40,7 @@ processors:
       - context: datapoint
         statements:
           - set(attributes["http.response.status.code"], attributes["http.status_code"]) where metric.name == "http.server.request.duration" and attributes["http.status_code"] != nil
+          - delete_key(attributes, "http.status_code") where metric.name == "http.server.request.duration"
 
 exporters:
   debug:

@@ -3,6 +3,11 @@
 set -euo pipefail
 
 cd "$(dirname "$0")"
+
+# A fresh clone / CI runner has no .env (it is gitignored); seed it from the committed
+# example so `docker compose --env-file .env` works on a clean checkout.
+[ -f .env ] || cp .env.example .env
+
 COMPOSE=(docker compose -f docker-compose.yml --env-file .env)
 
 fail() { echo "SMOKE FAIL: $*" >&2; exit 1; }

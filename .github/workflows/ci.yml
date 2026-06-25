@@ -1,0 +1,142 @@
+name: ci
+
+on:
+  push:
+    branches: [master, feat/gps-tracker-v2]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache: true
+          cache-dependency-path: backend/go.sum
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.12.2
+          working-directory: backend
+          args: --timeout=5m
+
+      - name: go vet
+        working-directory: backend
+        run: go vet ./...
+
+      - name: unit tests
+        working-directory: backend
+        run: go test ./...
+
+      - name: integration tests
+        working-directory: backend
+        run: go test -tags=integration ./...
+
+  sqlc-drift:
+    name: sqlc-drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: sqlc-dev/setup-sqlc@v3
+        with:
+          sqlc-version: "1.31.1"
+
+      - name: sqlc generate
+        working-directory: backend
+        run: sqlc generate
+
+      - name: fail on generated-code drift
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Generated code is out of date — run 'sqlc generate' and commit the result:"
+            git status --porcelain
+            git diff
+            exit 1
+          fi
+
+  frontend:
+    name: frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: install deps
+        working-directory: frontend
+        run: npm ci
+
+      - name: lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: test
+        working-directory: frontend
+        run: npm run test
+
+      - name: build
+        working-directory: frontend
+        run: npm run build
+
+  images:
+    name: images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: build backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: backend
+          file: backend/Dockerfile
+          push: false
+          load: true
+          tags: gps-tracker/api:ci
+
+      - name: build frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: frontend
+          file: frontend/Dockerfile
+          push: false
+          load: true
+          tags: gps-tracker/frontend:ci
+
+      - name: trivy scan backend image
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          image-ref: gps-tracker/api:ci
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
+
+      - name: trivy scan frontend image
+        uses: aquasecurity/trivy-action@0.36.0
+        with:
+          image-ref: gps-tracker/frontend:ci
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: HIGH,CRITICAL

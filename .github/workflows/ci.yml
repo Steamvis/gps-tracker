@@ -122,7 +122,7 @@ jobs:
           tags: gps-tracker/frontend:ci
 
       - name: trivy scan backend image
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: gps-tracker/api:ci
           format: table
@@ -132,7 +132,7 @@ jobs:
           severity: HIGH,CRITICAL
 
       - name: trivy scan frontend image
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: gps-tracker/frontend:ci
           format: table

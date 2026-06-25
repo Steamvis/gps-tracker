@@ -1,0 +1,75 @@
+# golangci-lint v2.x configuration (schema "2").
+# Pinned linter version in CI: see .github/workflows/ci.yml (golangci-lint-action@v7).
+version: "2"
+
+run:
+  tests: true
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - revive
+    - staticcheck
+  settings:
+    govet:
+      enable-all: true
+      # shadow flags idiomatic `if err := ...; err != nil` re-declarations, and
+      # fieldalignment is a micro-optimization that reorders struct fields at the
+      # cost of readability; both are noisy and intentionally not enforced.
+      disable:
+        - fieldalignment
+        - shadow
+    revive:
+      severity: warning
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: exported
+        - name: increment-decrement
+        - name: var-declaration
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: empty-block
+        - name: superfluous-else
+        - name: unreachable-code
+        - name: redefines-builtin-id
+  exclusions:
+    # sqlc-generated code is not ours to lint (also covered by the default
+    # generated-file detection, kept explicit for clarity).
+    rules:
+      - path: internal/adapter/postgres/sqlcgen/
+        linters:
+          - errcheck
+          - revive
+          - staticcheck
+      # Relax exported-symbol comments and unchecked errors in tests.
+      - path: _test\.go
+        linters:
+          - errcheck
+          - revive
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/Steamvis/gps-tracker/backend
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

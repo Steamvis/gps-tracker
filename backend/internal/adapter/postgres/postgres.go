@@ -1,3 +1,5 @@
+// Package postgres is the PostgreSQL/PostGIS adapter: a pgx connection pool, the
+// sqlc-generated query set, and the embedded goose migration runner.
 package postgres
 
 import (
@@ -60,7 +62,7 @@ func Migrate(ctx context.Context, cfg config.Config) error {
 		return fmt.Errorf("postgres: parse migrate dsn: %w", err)
 	}
 	db := stdlib.OpenDB(*connCfg.ConnConfig)
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	if err := db.PingContext(ctx); err != nil {
 		return fmt.Errorf("postgres: migrate ping: %w", err)

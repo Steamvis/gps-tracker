@@ -1,0 +1,116 @@
+# https://taskfile.dev — go-task v3 schema.
+# Everyday developer commands for the gps-tracker monorepo.
+version: '3'
+
+vars:
+  COMPOSE: docker compose -f deploy/docker-compose.yml --env-file deploy/.env
+
+tasks:
+  _ensure-env:
+    internal: true
+    # deploy/.env is git-ignored; seed it from the committed example so the compose
+    # tasks below work on a fresh clone. `status` makes this a no-op once .env exists.
+    cmds:
+      - cp -n deploy/.env.example deploy/.env
+    status:
+      - test -f deploy/.env
+
+  up:
+    desc: Build and start the full local stack (detached).
+    deps: [_ensure-env]
+    cmds:
+      - '{{.COMPOSE}} up -d --build'
+
+  down:
+    desc: Stop and remove the stack containers.
+    deps: [_ensure-env]
+    cmds:
+      - '{{.COMPOSE}} down'
+
+  down-v:
+    desc: Stop the stack and delete its volumes (DESTROYS data).
+    deps: [_ensure-env]
+    cmds:
+      - '{{.COMPOSE}} down -v'
+
+  logs:
+    desc: Follow logs from all stack services.
+    deps: [_ensure-env]
+    cmds:
+      - '{{.COMPOSE}} logs -f'
+
+  smoke:
+    desc: Run the end-to-end smoke test against the running stack.
+    deps: [_ensure-env]
+    cmds:
+      - bash deploy/smoke.sh
+
+  be:test:
+    desc: Run the backend Go unit tests.
+    dir: backend
+    cmds:
+      - go test ./...
+
+  be:test:int:
+    desc: Run the backend Go integration tests (build tag 'integration').
+    dir: backend
+    cmds:
+      - go test -tags=integration ./...
+
+  be:lint:
+    desc: Lint the backend with golangci-lint.
+    dir: backend
+    cmds:
+      - golangci-lint run
+
+  be:sqlc:
+    desc: Regenerate the sqlc query code.
+    dir: backend
+    cmds:
+      - sqlc generate
+
+  be:migrate-new:
+    desc: "Create a new goose SQL migration. Usage: task be:migrate-new NAME=add_devices_table"
+    dir: backend
+    requires:
+      vars: [NAME]
+    cmds:
+      - goose -dir internal/adapter/postgres/db/migrations create {{.NAME}} sql
+
+  fe:test:
+    desc: Run the frontend unit tests.
+    dir: frontend
+    cmds:
+      - npm run test
+
+  fe:lint:
+    desc: Lint the frontend.
+    dir: frontend
+    cmds:
+      - npm run lint
+
+  fe:build:
+    desc: Build the frontend production bundle.
+    dir: frontend
+    cmds:
+      - npm run build
+
+  fmt:
+    desc: Format Go code and auto-fix frontend lint issues.
+    cmds:
+      - cd backend && gofmt -w .
+      - cd frontend && npm run lint -- --fix
+
+  ci:
+    desc: Run the full local CI gate (backend lint+vet+test, sqlc drift, frontend lint+test+build).
+    cmds:
+      - task: be:lint
+      - cmd: go vet ./...
+        dir: backend
+      - task: be:test
+      - cmd: sqlc generate
+        dir: backend
+      - cmd: git diff --exit-code
+      - task: fe:lint
+      - task: fe:test
+      - task: fe:build

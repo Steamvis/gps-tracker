@@ -1,0 +1,16 @@
+# VCS / editor
+.git
+.gitignore
+.idea
+.vscode
+
+# Go build / test artifacts
+bin/
+*.test
+*.out
+coverage.out
+
+# Docs / tooling not needed in the image build
+*.md
+Dockerfile
+.dockerignore
